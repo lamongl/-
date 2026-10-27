@@ -1,0 +1,14 @@
+{
+  "name": "prompt-workbench",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "面向日常办公的提示词工作台交互演示",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node web/server.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test web/core.test.mjs scripts/build.test.mjs"
+  }
+}

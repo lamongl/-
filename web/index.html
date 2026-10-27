@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f6f3">
+  <meta name="description" content="描述办公需求，逐个补充关键信息，整理成可直接交给 AI 的提示词。">
+  <title>提示词助手 · 工作台预览</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到任务输入</a>
+  <header class="topbar">
+    <div class="brand" aria-label="提示词助手">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6zM10 9h4M10 13h4M10 17h2"/></svg></span>
+      <span>提示词助手<small>把需求整理成行动</small></span>
+    </div>
+    <div class="top-actions"><span class="preview-badge"><span aria-hidden="true"></span>交互预览</span><button id="about" class="quiet" type="button">使用说明</button><button id="new-task" class="secondary" type="button"><span aria-hidden="true">＋</span> 新建任务</button></div>
+  </header>
+  <main id="main" tabindex="-1">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">把想做的事，说清楚。</h1>
+      <p>从报表到文档，说说你的任务，整理出一份可以交给 AI 的提示词。</p>
+    </section>
+    <div class="mode-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>当前是交互演示，尚未连接 AI。</strong><span> 草稿由模板整理，不代表正式生成效果。</span></p></div>
+    <ol class="steps" aria-label="任务流程">
+      <li data-step="input" aria-current="step"><b aria-hidden="true">1</b><span>描述需求</span></li>
+      <li data-step="question"><b aria-hidden="true">2</b><span>必要时补充</span></li>
+      <li data-step="result"><b aria-hidden="true">3</b><span>复制提示词</span></li>
+    </ol>
+    <div class="workbench" id="workbench">
+      <div class="task-column">
+        <section class="editor" id="input-panel" aria-labelledby="input-title">
+          <form id="request-form" novalidate>
+            <div class="editor-top"><div><h2 id="input-title">今天要完成什么？</h2><p>选择一个场景，也可以按自己的方式描述。</p></div></div>
+            <div id="categories" class="categories" role="group" aria-label="任务类型"></div>
+            <div class="field-group"><label for="request">任务需求</label><textarea id="request" name="request" autocomplete="off" maxlength="12000" aria-describedby="request-help request-error" placeholder="例如：整理这份销售数据，给部门主管写一份月报，重点说明变化和需要关注的问题…"></textarea><p id="request-error" class="field-error" role="alert" hidden></p><div class="field-meta"><span id="request-help">主题、用途、格式，想到什么就写什么。</span><span id="count">0 / 12,000</span></div></div>
+            <div class="attachment-zone"><div class="attachment-toolbar"><button id="attach" class="attach" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 13 7-7a3 3 0 0 1 4 4l-9 9a5 5 0 0 1-7-7l9-9M7 14l8-8"/></svg><span id="attach-label">添加参考资料</span></button><span class="file-hint">TXT、MD、CSV</span></div><p class="attachment-help" id="file-help">可选，最多 3 份，每份 200 KB。文件只在本页读取。</p><input id="file-input" type="file" accept=".txt,.md,.csv" multiple aria-describedby="file-help" hidden><div id="files" class="files" aria-live="polite"></div><p id="file-error" class="field-error" role="alert" hidden></p></div>
+            <div class="action-row"><p>只在关键不明确时，<br>再问你一个问题。</p><button id="start" class="primary" type="submit">整理我的需求<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+          </form>
+        </section>
+        <section class="editor" id="question-panel" aria-labelledby="question-text" hidden>
+          <div class="editor-top"><span class="section-kicker">补充一个关键信息</span><button id="back" class="quiet" type="button">修改原始需求</button></div>
+          <div class="context-line"><span>你的任务</span><p id="question-context"></p></div>
+          <h2 id="question-text" class="question-title" tabindex="-1"></h2>
+          <p class="question-help">选择最接近的答案，或在下方补充。</p>
+          <form id="answer-form" novalidate>
+            <div id="options" class="options" role="group" aria-labelledby="question-text"></div>
+            <div class="field-group"><label for="answer">你的回答</label><textarea id="answer" name="answer" autocomplete="off" maxlength="2000" aria-describedby="answer-error" placeholder="写下你的回答…"></textarea><p id="answer-error" class="field-error" role="alert" hidden></p></div>
+            <div class="action-row"><p>已有的信息会保留，<br>不必重新说明。</p><button id="answer-submit" class="primary" type="submit">确认回答<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+          </form>
+        </section>
+        <section class="editor" id="result-panel" aria-labelledby="result-title" hidden>
+          <div class="editor-top"><div><span class="section-kicker">整理完成</span><h2 id="result-title" tabindex="-1">你的提示词草稿</h2></div><span class="demo-tag">未经 AI 评审</span></div>
+          <p class="result-note">需求与补充要求已整理在一起，可复制到目标 AI 中继续使用。</p>
+          <div class="field-group result-field"><label class="sr-only" for="result">完整提示词</label><textarea id="result" name="result" readonly></textarea></div>
+          <div class="action-row"><button id="edit-input" class="quiet" type="button">返回修改需求</button><button id="copy" class="primary" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 8h12v12H8zM16 8V4H4v12h4"/></svg><span id="copy-label">复制完整提示词</span></button></div>
+          <p id="copy-status" class="inline-status" role="status" hidden></p>
+          <form id="revision-form" class="revision" novalidate><label for="revision">还想调整什么？</label><p>保留原始需求，只补充这次需要修改的地方。</p><div><input id="revision" name="revision" autocomplete="off" maxlength="2000" aria-describedby="revision-error" placeholder="例如：更简洁，但保留所有数据…"><button id="revise" class="secondary" type="submit">更新草稿</button></div><p id="revision-error" class="field-error" role="alert" hidden></p><p id="revision-status" class="inline-status" role="status" hidden></p></form>
+        </section>
+      </div>
+      <aside id="examples" class="examples" aria-labelledby="example-title">
+        <h2 id="example-title">从一个具体任务开始</h2><p class="examples-lead">选一个例子，改成你的需求。</p>
+        <div class="example-list">
+          <button data-example="report" type="button"><span class="example-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 4v16M4 15h16"/></svg></span><span><strong>分析一份报表</strong><small>销售变化、异常与行动建议</small></span><span class="example-arrow" aria-hidden="true">›</span></button>
+          <button data-example="document" type="button"><span class="example-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg></span><span><strong>写清一份文档</strong><small>内部通知、说明与工作汇报</small></span><span class="example-arrow" aria-hidden="true">›</span></button>
+          <button data-example="slides" type="button"><span class="example-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h18v12H3zM12 16v5m-4 0h8M7 8h10M7 12h6"/></svg></span><span><strong>准备一次分享</strong><small>主题结构、逐页内容与讲稿</small></span><span class="example-arrow" aria-hidden="true">›</span></button>
+          <button data-example="research" type="button"><span class="example-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6"/></svg></span><span><strong>整理信息摘要</strong><small>聚焦问题、检索范围与来源</small></span><span class="example-arrow" aria-hidden="true">›</span></button>
+        </div>
+        <div class="handoff-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><h3>最后，只带走一份提示词。</h3><p>无需比较多个版本。复制完整文本，再交给你使用的 AI。</p></div>
+      </aside>
+    </div>
+    <div class="privacy-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 10h14v10H5zM8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg><p>此预览不上传资料、不保存历史。刷新或关闭页面后，当前内容会清除。</p></div>
+    <footer><span>网页版只生成提示词，不执行任务。</span><span>交互演示 v0.2</span></footer>
+  </main>
+  <dialog id="about-dialog" aria-labelledby="about-title"><h2 id="about-title">这份预览可以做什么？</h2><p>选择场景、输入需求、逐个补充回答，读取文本附件，复制或修改提示词草稿。</p><p>目前使用本地规则和模板，没有调用 AI，也没有执行 11 个候选的生成与评审。草稿不能代表正式模型的优化质量。</p><p>仅支持 UTF-8 编码的 TXT、MD、CSV。所有输入保留在页面内存中，刷新后清除。</p><div class="dialog-actions"><button id="close-dialog" class="primary" type="button">知道了</button></div></dialog>
+  <dialog id="replace-dialog" aria-labelledby="replace-title" aria-describedby="replace-description"><h2 id="replace-title">开始新的任务？</h2><p id="replace-description">当前需求、附件与草稿会被清除。</p><div class="dialog-actions"><button id="cancel-replace" class="secondary" type="button" autofocus>保留当前内容</button><button id="confirm-replace" class="primary" type="button">开始新任务</button></div></dialog>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
+
