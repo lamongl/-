@@ -1,6 +1,14 @@
 # 提示词助手 · Prompt Workbench
 
-把办公需求整理成可以复制给 AI 的提示词。适用于报表分析、文档写作、PPT 制作与信息检索摘要，支持手机与电脑。
+**少问几次，把办公需求交给 AI 完成。**
+
+**Fewer unnecessary questions. Turn everyday office requests into usable AI deliverables.**
+
+[English](README.en.md) · [在线演示 / Web demo](https://lamongl.github.io/-/) · [下载 Skill / Download](https://github.com/lamongl/-/releases/tag/skill-v0.1.0) · [安装 / Install](docs/skill-release.md) · [对照测试 / Benchmark](docs/benchmarks/README.md) · [反馈 / Issues](https://github.com/lamongl/-/issues)
+
+面向非专业用户的开源办公 Skill，适用于报表分析、文档写作、PPT内容和信息检索摘要。由宿主 AI 理解需求、逐题补充必要信息、筛选执行方案并交付成果。网页版提供手机和电脑可用的模板交互演示。
+
+Open-source office-work Skill for reports, documents, presentation content and research summaries. The host AI clarifies only necessary details, reviews candidate plans and delivers the requested output. The website offers a separate template-based interaction demo.
 
 **网页版是交互演示：使用本地规则和模板，尚未连接 AI。网页版没有实现 11 候选生成、评分或任务执行。**
 
@@ -10,7 +18,23 @@
 
 查看 [安装说明与验收案例](docs/skill-release.md)。Codex 安装目录为 `~/.codex/skills/prompt-workbench`；将仓库 `skills/prompt-workbench` 整个文件夹复制进去，再开启新会话使用 `$prompt-workbench`。
 
-版本 v0.1.0 为公开试用，尚未完成真实安装后的全套行为验收。网页版仍保持原有演示功能。
+版本 v0.1.0 为公开试用，本机安装与销售月报模拟已完成；附件、联网和PPT文件生成尚未全面验收。网页版仍保持原有演示功能。
+
+## 初步实测 / Exploratory benchmark
+
+3个合成任务，每种方式每任务1次，指定相同模型 `gpt-6.1-terra` 与 medium 推理设置。测量包括宿主和Skill输入开销，不是只数最终回答。
+
+| 合计指标 / Aggregate | 不用 Skill / Baseline | 使用 Skill / With Skill |
+|---|---:|---:|
+| 总 token / Total tokens | 48,746 | 55,144 |
+| 最终输出 token / Output tokens | 524 | 358 |
+| 墙钟耗时 / Wall time | 33.60秒 | 33.95秒 |
+
+**本轮总token增加13.1%，未测得总体提效。** 输出token减少31.7%，不能据此宣传总成本下降。每组仅1次，缓存与网络不同，也未核验模型内部11候选是否执行，不能推广为普遍效果。
+
+**Total tokens increased by 13.1%; no aggregate speed improvement was observed.** Output tokens decreased by 31.7%, which is not a reduction in total usage. This is a one-run-per-task pilot with cache/network variability; internal 11-candidate compliance was not observed.
+
+完整方法、逐项结果及原始usage见 [对照记录](docs/benchmarks/README.md)。
 
 ## 功能
 

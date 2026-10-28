@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f4f6f3">
-  <meta name="description" content="描述办公需求，逐个补充关键信息，整理成可直接交给 AI 的提示词。">
+  <meta name="description" content="Prompt Workbench：开源办公 Skill 与网页演示。Reports, documents, presentations and research summaries with fewer unnecessary questions.">
   <title>提示词助手 · 工作台预览</title>
   <link rel="stylesheet" href="./style.css">
 </head>
@@ -25,6 +25,14 @@
       <p>从报表到文档，说说你的任务，整理出一份可以交给 AI 的提示词。</p>
     </section>
     <div class="mode-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>当前是交互演示，尚未连接 AI。</strong><span> 草稿由模板整理，不代表正式生成效果。</span></p></div>
+    <nav class="project-links" aria-label="项目与安装">
+      <a href="https://github.com/lamongl/-/releases/tag/skill-v0.1.0">下载 / Download ↗</a>
+      <a href="https://github.com/lamongl/-/blob/main/docs/skill-release.md">安装 / Install ↗</a>
+      <a href="https://github.com/lamongl/-/blob/main/docs/benchmarks/README.md">对照测试 / Benchmark ↗</a>
+      <a href="https://github.com/lamongl/-/issues">反馈 / Issues ↗</a>
+    </nav>
+    <p class="benchmark-note">Skill 由你使用的 AI 执行。首轮 3 任务对照中，总 token 增加 13.1%，未测得总体提效；详见测试记录。</p>
+    <p class="benchmark-note" lang="en">Open-source office-work Skill, powered by your AI host. In the 3-task pilot, total tokens increased 13.1%; no aggregate speed improvement was observed.</p>
     <ol class="steps" aria-label="任务流程">
       <li data-step="input" aria-current="step"><b aria-hidden="true">1</b><span>描述需求</span></li>
       <li data-step="question"><b aria-hidden="true">2</b><span>必要时补充</span></li>
@@ -80,4 +88,3 @@
   <script type="module" src="./app.mjs"></script>
 </body>
 </html>
-

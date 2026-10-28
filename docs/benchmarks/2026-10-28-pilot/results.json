@@ -1,0 +1,106 @@
+{
+  "model_requested": "gpt-6.1-terra",
+  "effort": "medium",
+  "cli": "codex-cli 0.163.0-alpha.10.2",
+  "skill_sha256": "83d12e7ef45d8d66f5613dd94d0ca5c20a808c10ba2bbfac285d8aae146747ea",
+  "repeats_per_task": 1,
+  "measurement": "wall time includes CLI startup, network and inference; token usage is CLI-reported, not money",
+  "limitations": [
+    "one run per task and mode; exploratory only",
+    "no human time measurement",
+    "11 internal candidates not observable in final-output-only mode",
+    "same skill catalog may be advertised to both modes; baseline explicitly told not to use skills"
+  ],
+  "runs": [
+    {
+      "task": "sales",
+      "mode": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 7.63,
+      "usage": {
+        "input_tokens": 16069,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 45,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-baseline.answer.md"
+    },
+    {
+      "task": "sales",
+      "mode": "skill",
+      "status": "completed",
+      "elapsed_seconds": 12.19,
+      "usage": {
+        "input_tokens": 18257,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 59,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-skill.answer.md"
+    },
+    {
+      "task": "notice",
+      "mode": "skill",
+      "status": "completed",
+      "elapsed_seconds": 9.65,
+      "usage": {
+        "input_tokens": 18254,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 46,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-skill.answer.md"
+    },
+    {
+      "task": "notice",
+      "mode": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 9.59,
+      "usage": {
+        "input_tokens": 16066,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-baseline.answer.md"
+    },
+    {
+      "task": "slides",
+      "mode": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 16.38,
+      "usage": {
+        "input_tokens": 16087,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 438,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-baseline.answer.md"
+    },
+    {
+      "task": "slides",
+      "mode": "skill",
+      "status": "completed",
+      "elapsed_seconds": 12.11,
+      "usage": {
+        "input_tokens": 18275,
+        "cached_input_tokens": 18048,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 253,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-skill.answer.md"
+    }
+  ]
+}

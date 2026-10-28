@@ -1,0 +1,33 @@
+name: Publish Skill preview
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/skill-release.yml'
+      - 'docs/releases/skill-v0.1.0.md'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: skill-v0.1.0-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Package and verify public files
+        run: python3 scripts/package-skill.py
+      - name: Publish preview once
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view skill-v0.1.0 >/dev/null 2>&1; then
+            echo 'Version already exists; leaving its published assets unchanged.'
+          else
+            gh release create skill-v0.1.0 release/prompt-workbench-v0.1.0.zip release/prompt-workbench-v0.1.0.zip.sha256 --target "$GITHUB_SHA" --title 'Prompt Workbench Skill v0.1.0 (Preview)' --notes-file docs/releases/skill-v0.1.0.md --prerelease
+          fi
