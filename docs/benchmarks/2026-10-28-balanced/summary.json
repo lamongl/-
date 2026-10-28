@@ -1,0 +1,256 @@
+{
+  "totals": {
+    "baseline": {
+      "input": 101379,
+      "output": 1043,
+      "cached": 86528,
+      "seconds": 69.56,
+      "median_seconds": 10.165,
+      "total": 102422
+    },
+    "legacy": {
+      "input": 114507,
+      "output": 736,
+      "cached": 85248,
+      "seconds": 63.49,
+      "median_seconds": 10.495000000000001,
+      "total": 115243
+    },
+    "lean": {
+      "input": 103786,
+      "output": 960,
+      "cached": 89088,
+      "seconds": 75.13,
+      "median_seconds": 11.26,
+      "total": 104746
+    }
+  },
+  "lean_vs_legacy_total_token_reduction_pct": 9.11,
+  "lean_vs_legacy_walltime_reduction_pct": -18.33,
+  "lean_vs_baseline_total_token_overhead_pct": 2.27,
+  "lean_vs_baseline_walltime_change_pct": 8.01,
+  "constraint_checks": [
+    {
+      "answer": "sales-baseline-1.answer.md",
+      "required_terms": {
+        "100": true,
+        "120": true,
+        "20": true,
+        "20%": true,
+        "同比": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "sales-legacy-1.answer.md",
+      "required_terms": {
+        "100": true,
+        "120": true,
+        "20": true,
+        "20%": true,
+        "同比": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "sales-lean-1.answer.md",
+      "required_terms": {
+        "100": true,
+        "120": true,
+        "20": true,
+        "20%": true,
+        "同比": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "notice-legacy-1.answer.md",
+      "required_terms": {
+        "10月30日": true,
+        "22:00": true,
+        "23:00": true,
+        "登录": true,
+        "保存": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "notice-lean-1.answer.md",
+      "required_terms": {
+        "10月30日": true,
+        "22:00": true,
+        "23:00": true,
+        "登录": true,
+        "保存": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "notice-baseline-1.answer.md",
+      "required_terms": {
+        "10月30日": true,
+        "22:00": true,
+        "23:00": true,
+        "登录": true,
+        "保存": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "slides-lean-1.answer.md",
+      "required_terms": {
+        "6页": true,
+        "新员工": true,
+        "文档": true,
+        "报表": true,
+        "检索": true,
+        "备注": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "slides-baseline-1.answer.md",
+      "required_terms": {
+        "6页": true,
+        "新员工": true,
+        "文档": true,
+        "报表": true,
+        "检索": true,
+        "备注": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "slides-legacy-1.answer.md",
+      "required_terms": {
+        "6页": true,
+        "新员工": true,
+        "文档": true,
+        "报表": true,
+        "检索": true,
+        "备注": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "sales-baseline-2.answer.md",
+      "required_terms": {
+        "100": true,
+        "120": true,
+        "20": true,
+        "20%": true,
+        "同比": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "sales-lean-2.answer.md",
+      "required_terms": {
+        "100": true,
+        "120": true,
+        "20": true,
+        "20%": true,
+        "同比": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "sales-legacy-2.answer.md",
+      "required_terms": {
+        "100": true,
+        "120": true,
+        "20": true,
+        "20%": true,
+        "同比": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "notice-legacy-2.answer.md",
+      "required_terms": {
+        "10月30日": true,
+        "22:00": true,
+        "23:00": true,
+        "登录": true,
+        "保存": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "notice-baseline-2.answer.md",
+      "required_terms": {
+        "10月30日": true,
+        "22:00": true,
+        "23:00": true,
+        "登录": true,
+        "保存": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "notice-lean-2.answer.md",
+      "required_terms": {
+        "10月30日": true,
+        "22:00": true,
+        "23:00": true,
+        "登录": true,
+        "保存": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "slides-lean-2.answer.md",
+      "required_terms": {
+        "6页": true,
+        "新员工": true,
+        "文档": true,
+        "报表": true,
+        "检索": true,
+        "备注": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "slides-legacy-2.answer.md",
+      "required_terms": {
+        "6页": true,
+        "新员工": true,
+        "文档": true,
+        "报表": true,
+        "检索": true,
+        "备注": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    },
+    {
+      "answer": "slides-baseline-2.answer.md",
+      "required_terms": {
+        "6页": true,
+        "新员工": true,
+        "文档": true,
+        "报表": true,
+        "检索": true,
+        "备注": true
+      },
+      "all_terms_present": true,
+      "scope": "仅检查硬性内容出现，不是完整语义质量评分"
+    }
+  ]
+}

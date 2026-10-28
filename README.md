@@ -1,8 +1,8 @@
 # 提示词助手 · Prompt Workbench
 
-**少问几次，把办公需求交给 AI 完成。**
+**实验性办公 Skill：效果与成本仍在验证。**
 
-**Fewer unnecessary questions. Turn everyday office requests into usable AI deliverables.**
+**Experimental office-work Skill. Quality and efficiency improvements are not established.**
 
 [English](README.en.md) · [在线演示 / Web demo](https://lamongl.github.io/-/) · [下载 Skill / Download](https://github.com/lamongl/-/releases/tag/skill-v0.1.0) · [安装 / Install](docs/skill-release.md) · [对照测试 / Benchmark](docs/benchmarks/README.md) · [反馈 / Issues](https://github.com/lamongl/-/issues)
 
@@ -20,7 +20,13 @@ Open-source office-work Skill for reports, documents, presentation content and r
 
 版本 v0.1.0 为公开试用，本机安装与销售月报模拟已完成；附件、联网和PPT文件生成尚未全面验收。网页版仍保持原有演示功能。
 
-## 初步实测 / Exploratory benchmark
+## 最新复测 / Latest comparison
+
+三个任务各做两次，三组均为6/6满足明确要求，未测得质量提升。精简版相对旧版总token减少9.11%，但比不用Skill多2.27%，本轮耗时更长，且存在宿主隐藏输入变化。精简版仅保留为实验候选，不作为已提效版本发布。[查看原始输出与完整限制](docs/benchmarks/2026-10-28-balanced/README.md)。
+
+All three conditions met the explicit requirements in 6/6 text outputs; no quality advantage was demonstrated. Lean instructions reduced reported tokens versus legacy, but still used more than baseline and did not improve wall time. Hidden-input variation limits causal attribution. The lean candidate is not released as a proven improvement.
+
+## 旧版初测 / Earlier pilot
 
 3个合成任务，每种方式每任务1次，指定相同模型 `gpt-6.1-terra` 与 medium 推理设置。测量包括宿主和Skill输入开销，不是只数最终回答。
 

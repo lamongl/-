@@ -1,6 +1,6 @@
 # Prompt Workbench
 
-An open-source Codex Skill for turning everyday office requests into usable reports, documents, presentation content and research summaries, with fewer unnecessary clarification questions.
+An experimental open-source Codex Skill for everyday reports, documents, presentation content and research summaries. Quality and efficiency improvements have not been established.
 
 [中文说明](README.md) · [Web demo](https://lamongl.github.io/-/) · [Install](docs/skill-release.md) · [Download Skill preview](https://github.com/lamongl/-/releases/tag/skill-v0.1.0) · [Benchmark pilot](docs/benchmarks/README.md)
 
@@ -18,7 +18,11 @@ The host model and its available tools do the work. The project supplies no mode
 - Supports a prompt-only mode when explicitly requested.
 - Reports inaccessible materials and missing capabilities instead of claiming success.
 
-## Current validation
+## Latest comparison
+
+In a second three-task comparison (two runs per condition per task), baseline, legacy and lean each met explicit requirements in 6/6 outputs. No quality improvement was demonstrated. Lean used 9.11% fewer reported total tokens than legacy, but 2.27% more than baseline; wall time was higher. Hidden-input variation also affected the trial. The lean candidate remains experimental and is not released as a proven efficiency gain. [Inspect the complete outputs and limitations](docs/benchmarks/2026-10-28-balanced/README.md).
+
+## Earlier validation
 
 Preview v0.1.0: installed locally and exercised on a synthetic sales report. In a paired pilot on three tasks using the same requested model (`gpt-6.1-terra`, medium), total reported tokens were **48,746 without the Skill and 55,144 with it: a 13.1% increase**. Wall time was **33.60s versus 33.95s**, so no aggregate speed improvement was observed. Output tokens decreased from 524 to 358 (31.7%), but this does not mean total usage or cost decreased.
 

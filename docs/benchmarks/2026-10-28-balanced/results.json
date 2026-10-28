@@ -1,0 +1,302 @@
+{
+  "model_requested": "gpt-6.1-terra",
+  "effort": "medium",
+  "repeats_per_task": 2,
+  "task_count": 3,
+  "variant_hashes": {
+    "baseline": "cb29cdb8fd408382eeab241820f4d3ca3a0eac33973749764a1e80344ba06eee",
+    "legacy": "43679262284ad6d078e96d65cb33f8c7e6435d727ed0af9583486b1e91e06b6e",
+    "lean": "58f3c7c2f9ad550a3739bbee88897d487addd1d72356056937c83cfe00c0286b"
+  },
+  "measurement": "CLI reported input/output including cache in input; wall time includes startup and network",
+  "runs": [
+    {
+      "task": "sales",
+      "mode": "baseline",
+      "repeat": 1,
+      "elapsed_seconds": 8.38,
+      "usage": {
+        "input_tokens": 16067,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 47,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-baseline-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "sales",
+      "mode": "legacy",
+      "repeat": 1,
+      "elapsed_seconds": 9.03,
+      "usage": {
+        "input_tokens": 18255,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 48,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-legacy-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "sales",
+      "mode": "lean",
+      "repeat": 1,
+      "elapsed_seconds": 9.55,
+      "usage": {
+        "input_tokens": 16452,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 45,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-lean-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "notice",
+      "mode": "legacy",
+      "repeat": 1,
+      "elapsed_seconds": 11.76,
+      "usage": {
+        "input_tokens": 18252,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-legacy-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "notice",
+      "mode": "lean",
+      "repeat": 1,
+      "elapsed_seconds": 10.02,
+      "usage": {
+        "input_tokens": 16546,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 40,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-lean-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "notice",
+      "mode": "baseline",
+      "repeat": 1,
+      "elapsed_seconds": 10.65,
+      "usage": {
+        "input_tokens": 16064,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-baseline-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "slides",
+      "mode": "lean",
+      "repeat": 1,
+      "elapsed_seconds": 17.63,
+      "usage": {
+        "input_tokens": 16470,
+        "cached_input_tokens": 15872,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 394,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-lean-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "slides",
+      "mode": "baseline",
+      "repeat": 1,
+      "elapsed_seconds": 13.39,
+      "usage": {
+        "input_tokens": 16085,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 406,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-baseline-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "slides",
+      "mode": "legacy",
+      "repeat": 1,
+      "elapsed_seconds": 12.16,
+      "usage": {
+        "input_tokens": 18273,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 306,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-legacy-1.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "sales",
+      "mode": "baseline",
+      "repeat": 2,
+      "elapsed_seconds": 9.68,
+      "usage": {
+        "input_tokens": 16067,
+        "cached_input_tokens": 15872,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 45,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-baseline-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "sales",
+      "mode": "lean",
+      "repeat": 2,
+      "elapsed_seconds": 9.43,
+      "usage": {
+        "input_tokens": 16452,
+        "cached_input_tokens": 15872,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 48,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-lean-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "sales",
+      "mode": "legacy",
+      "repeat": 2,
+      "elapsed_seconds": 8.33,
+      "usage": {
+        "input_tokens": 18255,
+        "cached_input_tokens": 18048,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 57,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "sales-legacy-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "notice",
+      "mode": "legacy",
+      "repeat": 2,
+      "elapsed_seconds": 9.23,
+      "usage": {
+        "input_tokens": 18252,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-legacy-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "notice",
+      "mode": "baseline",
+      "repeat": 2,
+      "elapsed_seconds": 9.56,
+      "usage": {
+        "input_tokens": 21011,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 40,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-baseline-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "notice",
+      "mode": "lean",
+      "repeat": 2,
+      "elapsed_seconds": 12.5,
+      "usage": {
+        "input_tokens": 21396,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "notice-lean-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "slides",
+      "mode": "lean",
+      "repeat": 2,
+      "elapsed_seconds": 16.0,
+      "usage": {
+        "input_tokens": 16470,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 392,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-lean-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "slides",
+      "mode": "legacy",
+      "repeat": 2,
+      "elapsed_seconds": 12.98,
+      "usage": {
+        "input_tokens": 23220,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 243,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-legacy-2.answer.md",
+      "status": "completed"
+    },
+    {
+      "task": "slides",
+      "mode": "baseline",
+      "repeat": 2,
+      "elapsed_seconds": 17.9,
+      "usage": {
+        "input_tokens": 16085,
+        "cached_input_tokens": 15872,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 464,
+        "reasoning_output_tokens": 0
+      },
+      "tool_item_types": [],
+      "answer_file": "slides-baseline-2.answer.md",
+      "status": "completed"
+    }
+  ]
+}
