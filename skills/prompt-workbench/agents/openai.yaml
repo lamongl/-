@@ -1,0 +1,4 @@
+interface:
+  display_name: "提示词工作台"
+  short_description: "少量追问梳理办公需求，筛选执行方案并交付报表、文档、演示内容或摘要"
+  default_prompt: "使用 $prompt-workbench 整理我的办公需求，只追问必要信息，评审候选方案后直接完成任务。"
