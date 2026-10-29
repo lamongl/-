@@ -1,0 +1,21 @@
+{
+  "months": {
+    "2026-08": {
+      "rows": 360,
+      "gross_yuan": "57296.22",
+      "refund_yuan": "3249.95",
+      "net_yuan": "54046.27"
+    },
+    "2026-09": {
+      "rows": 360,
+      "gross_yuan": "66854.22",
+      "refund_yuan": "3249.95",
+      "net_yuan": "63604.27"
+    }
+  },
+  "total_rows": 736,
+  "excluded_rows": 16,
+  "net_change_yuan": "9558.00",
+  "net_change_pct": "17.68",
+  "source_sha256": "7246af379c478cca719d0e6ad0a130b8911293c170c8861fad5cf213853f36cc"
+}

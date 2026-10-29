@@ -22,6 +22,10 @@ Open-source office-work Skill for reports, documents, presentation content and r
 
 ## 最新复测 / Latest comparison
 
+补充研究：[可复用本地计算组件](docs/benchmarks/2026-10-29-csv-complete/README.md)在一个736行合成表格任务中，两组各两次均通过17项验收；观测到减少返工的收益，但幅度受一次临时编程错误影响。它是组件试验，尚不证明整个Skill提效，不作为产品宣传数字。
+
+Additional research: a [reusable local-calculation component](docs/benchmarks/2026-10-29-csv-complete/README.md) passed 17 checks twice in each condition. Observed savings were strongly affected by one avoided code-generation retry. This is not a whole-Skill efficiency claim.
+
 三个任务各做两次，三组均为6/6满足明确要求，未测得质量提升。精简版相对旧版总token减少9.11%，但比不用Skill多2.27%，本轮耗时更长，且存在宿主隐藏输入变化。精简版仅保留为实验候选，不作为已提效版本发布。[查看原始输出与完整限制](docs/benchmarks/2026-10-28-balanced/README.md)。
 
 All three conditions met the explicit requirements in 6/6 text outputs; no quality advantage was demonstrated. Lean instructions reduced reported tokens versus legacy, but still used more than baseline and did not improve wall time. Hidden-input variation limits causal attribution. The lean candidate is not released as a proven improvement.

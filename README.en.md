@@ -20,6 +20,8 @@ The host model and its available tools do the work. The project supplies no mode
 
 ## Latest comparison
 
+A [local-calculation component trial](docs/benchmarks/2026-10-29-csv-complete/README.md) explores reducing temporary-code generation and retries. Both conditions passed all 17 checks twice. Aggregate savings were strongly affected by one retry, and Skill-loading overhead was not measured. The component remains experimental; this is not a product-wide performance claim.
+
 In a second three-task comparison (two runs per condition per task), baseline, legacy and lean each met explicit requirements in 6/6 outputs. No quality improvement was demonstrated. Lean used 9.11% fewer reported total tokens than legacy, but 2.27% more than baseline; wall time was higher. Hidden-input variation also affected the trial. The lean candidate remains experimental and is not released as a proven efficiency gain. [Inspect the complete outputs and limitations](docs/benchmarks/2026-10-28-balanced/README.md).
 
 ## Earlier validation

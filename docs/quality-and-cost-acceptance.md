@@ -28,6 +28,8 @@ The acceptance target is lower total token use at equivalent delivered quality, 
 
 ## 当前状态
 
+[本地计算组件试验](benchmarks/2026-10-29-csv-complete/README.md)已在一个合成表格任务中观测到明确要求均合格时的消耗减少，主要与避免临时编程返工有关。样本小、收益不均匀，完整Skill加载与路由成本未计入，仍不作为整体产品达标证据。
+
 [18次文本复测](benchmarks/2026-10-28-balanced/README.md)：三组均6/6满足明确要求，尚未证明质量优势或等质量相对基线的token优势，也未做固定时间的质量测试。
 
 精简方案保留为实验候选，公开安装版仍为v0.1.0。没有对外宣称新版已达标，也没有将测试样本中的模型自审当成独立评测。

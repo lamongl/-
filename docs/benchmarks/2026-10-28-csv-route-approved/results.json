@@ -1,0 +1,74 @@
+{
+  "kind": "tool-enabled component experiment, not full installed-Skill superiority test",
+  "model_requested": "gpt-6.1-terra",
+  "effort": "medium",
+  "repeats": 2,
+  "helper_sha256": "9dca749ca2d9cfccef17ed6f52feeef9b322ee822975f7824c97557e88a8a41f",
+  "file_bytes": 29009,
+  "plan": "two repeats; reverse order on repeat 2; same input, tools, Python, workspace sandbox and automatic approval; commands requested read-only; 17 predetermined content checks; no retries selected for a positive outcome",
+  "runs": [
+    {
+      "mode": "baseline",
+      "repeat": 1,
+      "elapsed_seconds": 43.68,
+      "status": "completed",
+      "usage": {
+        "input_tokens": 105610,
+        "cached_input_tokens": 98432,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1892,
+        "reasoning_output_tokens": 167
+      },
+      "tool_calls": 5,
+      "tool_exit_codes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "grade": {
+        "passed": true,
+        "checks": {
+          "2026-08/rows": true,
+          "2026-08/gross_yuan": true,
+          "2026-08/refund_yuan": true,
+          "2026-08/net_yuan": true,
+          "2026-09/rows": true,
+          "2026-09/gross_yuan": true,
+          "2026-09/refund_yuan": true,
+          "2026-09/net_yuan": true,
+          "total_rows": true,
+          "excluded_rows": true,
+          "source_sha256": true,
+          "net_change_yuan": true,
+          "net_change_pct": true,
+          "yoy_null": true,
+          "prior_year_gap": true,
+          "cause_gap": true,
+          "summary_present": true
+        },
+        "failures": []
+      },
+      "answer_file": "baseline-1.answer.md"
+    },
+    {
+      "mode": "route",
+      "repeat": 1,
+      "elapsed_seconds": 11.61,
+      "status": "failed",
+      "usage": null,
+      "tool_calls": 1,
+      "tool_exit_codes": [
+        0
+      ],
+      "grade": {
+        "passed": false,
+        "failures": [
+          "not valid JSON"
+        ]
+      },
+      "answer_file": "route-1.answer.md"
+    }
+  ]
+}

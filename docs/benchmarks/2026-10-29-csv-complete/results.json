@@ -1,0 +1,181 @@
+{
+  "kind": "tool-enabled component experiment, not full installed-Skill superiority test",
+  "model_requested": "gpt-6.1-terra",
+  "effort": "medium",
+  "repeats": 2,
+  "route_version": "complete",
+  "helper_sha256": "d293050a994bb7b71ec90aa29f0e38387e269203694beef10a2fa4118fa6a2d3",
+  "file_bytes": 29009,
+  "plan": "two repeats; reverse order on repeat 2; same input, tools, Python, workspace sandbox and automatic approval; commands requested read-only; 17 predetermined content checks; no retries selected for a positive outcome",
+  "runs": [
+    {
+      "mode": "baseline",
+      "repeat": 1,
+      "elapsed_seconds": 27.48,
+      "status": "completed",
+      "failure_kind": null,
+      "usage": {
+        "input_tokens": 33268,
+        "cached_input_tokens": 16128,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 728,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 1,
+      "tool_exit_codes": [
+        0
+      ],
+      "grade": {
+        "passed": true,
+        "checks": {
+          "2026-08/rows": true,
+          "2026-08/gross_yuan": true,
+          "2026-08/refund_yuan": true,
+          "2026-08/net_yuan": true,
+          "2026-09/rows": true,
+          "2026-09/gross_yuan": true,
+          "2026-09/refund_yuan": true,
+          "2026-09/net_yuan": true,
+          "total_rows": true,
+          "excluded_rows": true,
+          "source_sha256": true,
+          "net_change_yuan": true,
+          "net_change_pct": true,
+          "yoy_null": true,
+          "prior_year_gap": true,
+          "cause_gap": true,
+          "summary_present": true
+        },
+        "failures": []
+      },
+      "answer_file": "baseline-1.answer.md"
+    },
+    {
+      "mode": "route",
+      "repeat": 1,
+      "elapsed_seconds": 16.7,
+      "status": "completed",
+      "failure_kind": null,
+      "usage": {
+        "input_tokens": 33322,
+        "cached_input_tokens": 31360,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 491,
+        "reasoning_output_tokens": 48
+      },
+      "tool_calls": 1,
+      "tool_exit_codes": [
+        0
+      ],
+      "grade": {
+        "passed": true,
+        "checks": {
+          "2026-08/rows": true,
+          "2026-08/gross_yuan": true,
+          "2026-08/refund_yuan": true,
+          "2026-08/net_yuan": true,
+          "2026-09/rows": true,
+          "2026-09/gross_yuan": true,
+          "2026-09/refund_yuan": true,
+          "2026-09/net_yuan": true,
+          "total_rows": true,
+          "excluded_rows": true,
+          "source_sha256": true,
+          "net_change_yuan": true,
+          "net_change_pct": true,
+          "yoy_null": true,
+          "prior_year_gap": true,
+          "cause_gap": true,
+          "summary_present": true
+        },
+        "failures": []
+      },
+      "answer_file": "route-1.answer.md"
+    },
+    {
+      "mode": "route",
+      "repeat": 2,
+      "elapsed_seconds": 24.87,
+      "status": "completed",
+      "failure_kind": null,
+      "usage": {
+        "input_tokens": 33301,
+        "cached_input_tokens": 28672,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 452,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 1,
+      "tool_exit_codes": [
+        0
+      ],
+      "grade": {
+        "passed": true,
+        "checks": {
+          "2026-08/rows": true,
+          "2026-08/gross_yuan": true,
+          "2026-08/refund_yuan": true,
+          "2026-08/net_yuan": true,
+          "2026-09/rows": true,
+          "2026-09/gross_yuan": true,
+          "2026-09/refund_yuan": true,
+          "2026-09/net_yuan": true,
+          "total_rows": true,
+          "excluded_rows": true,
+          "source_sha256": true,
+          "net_change_yuan": true,
+          "net_change_pct": true,
+          "yoy_null": true,
+          "prior_year_gap": true,
+          "cause_gap": true,
+          "summary_present": true
+        },
+        "failures": []
+      },
+      "answer_file": "route-2.answer.md"
+    },
+    {
+      "mode": "baseline",
+      "repeat": 2,
+      "elapsed_seconds": 29.97,
+      "status": "completed",
+      "failure_kind": null,
+      "usage": {
+        "input_tokens": 51022,
+        "cached_input_tokens": 40960,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1309,
+        "reasoning_output_tokens": 25
+      },
+      "tool_calls": 2,
+      "tool_exit_codes": [
+        1,
+        0
+      ],
+      "grade": {
+        "passed": true,
+        "checks": {
+          "2026-08/rows": true,
+          "2026-08/gross_yuan": true,
+          "2026-08/refund_yuan": true,
+          "2026-08/net_yuan": true,
+          "2026-09/rows": true,
+          "2026-09/gross_yuan": true,
+          "2026-09/refund_yuan": true,
+          "2026-09/net_yuan": true,
+          "total_rows": true,
+          "excluded_rows": true,
+          "source_sha256": true,
+          "net_change_yuan": true,
+          "net_change_pct": true,
+          "yoy_null": true,
+          "prior_year_gap": true,
+          "cause_gap": true,
+          "summary_present": true
+        },
+        "failures": []
+      },
+      "answer_file": "baseline-2.answer.md"
+    }
+  ]
+}

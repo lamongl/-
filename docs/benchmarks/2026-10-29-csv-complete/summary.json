@@ -1,0 +1,43 @@
+{
+  "baseline": {
+    "tokens": 86327,
+    "input_tokens": 84290,
+    "output_tokens": 2037,
+    "seconds": 57.45,
+    "tools": 3,
+    "failed_tools": 1,
+    "passes": [
+      17,
+      17
+    ]
+  },
+  "route": {
+    "tokens": 67566,
+    "input_tokens": 66623,
+    "output_tokens": 943,
+    "seconds": 41.57,
+    "tools": 2,
+    "failed_tools": 0,
+    "passes": [
+      17,
+      17
+    ]
+  },
+  "token_reduction_pct": 21.73,
+  "walltime_reduction_pct": 27.64,
+  "pairs": [
+    {
+      "repeat": 1,
+      "baseline": 33996,
+      "route": 33813,
+      "token_reduction_pct": 0.54
+    },
+    {
+      "repeat": 2,
+      "route": 33753,
+      "baseline": 52331,
+      "token_reduction_pct": 35.5
+    }
+  ],
+  "scope": "observations for one synthetic CSV component task; not a whole-product or independent quality improvement claim"
+}
