@@ -14,6 +14,8 @@ Open-source office-work Skill for reports, documents, presentation content and r
 
 网页版v0.3支持可选格式/风格、已有资料链接、文本附件、全文复制、TXT下载及设备支持时的系统分享。无需登录，输入不上传、不保存历史。[功能与发布验证](docs/web-v0.3.md)。
 
+v0.4新增四类独立场景示例及浏览器语音转文字。语音默认尝试本机识别，在线识别需明确允许，音频可能由浏览器服务处理；本站不保存录音。[兼容性与验证边界](docs/web-v0.4.md)。
+
 ## Skill 试用版
 
 现在提供 [prompt-workbench Skill](skills/prompt-workbench/SKILL.md)，由宿主模型按指令进行必要追问、至少11个候选的生成与评审，并直接完成办公任务。用户明确只要提示词时仅输出最终提示词。它不是训练模型，也不提供免费模型算力；实际执行效果受宿主模型与工具限制。

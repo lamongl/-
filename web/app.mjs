@@ -1,7 +1,15 @@
-import {categories,nextQuestion,composePreview,validateFile,parseSourceLinks,draftStats} from './core.mjs';
+import {categories,nextQuestion,composePreview,validateFile,parseSourceLinks,draftStats,scenarioExample} from './core.mjs';
+import {createDictation,appendDictation} from './speech.mjs';
 const $=id=>document.getElementById(id);
 let category='report',answers={},files=[],links=[],question=null,revision='',reading=false;
 let pendingReplacement=null,frozenRequest='',frozenCategory='',dirty=false;
+let dictating=false;
+const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+const dictation=createDictation({Recognition,
+ onText:text=>{const result=appendDictation($('request').value,text);$('request').value=result.value;dirty=true;count();fieldError('request','');if(result.overflow)announce('voice-overflow',($('voice-overflow').textContent||'未写入的完整语音文字（输入已超出12,000字符上限，请先精简或复制保留）：')+'\n'+result.overflow);},
+ onStatus:text=>announce('voice-status',text),
+ onState:active=>{dictating=active;$('voice-label').textContent=active?'结束语音输入':'语音输入';$('voice').setAttribute('aria-pressed',String(active));for(const b of [$('start'),$('new-task'),$('attach'),$('use-scenario'),...document.querySelectorAll('[data-example]')])b.disabled=active||reading;},
+});
 function announce(id,text){$(id).textContent=text;$(id).hidden=!text;}
 function fieldError(id,text){announce(id+'-error',text);$(id).setAttribute('aria-invalid',String(!!text));if(text)$(id).focus();}
 function stage(value){
@@ -18,13 +26,16 @@ function renderCategories(){
   for(const [id,c] of Object.entries(categories)){
     const b=document.createElement('button');b.type='button';b.textContent=c.name;b.dataset.category=id;
     b.setAttribute('aria-pressed',String(id===category));
-    b.onclick=()=>{if(category!==id)answers={};category=id;document.querySelectorAll('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.category===id)));};
+    b.onclick=()=>{if(category!==id)answers={};category=id;updateScenario();document.querySelectorAll('[data-category]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.category===id)));};
     $('categories').append(b);
   }
+  updateScenario();
 }
+function updateScenario(){$('request').placeholder=scenarioExample(category);$('scenario-example').textContent=categories[category].sample;$('use-scenario').textContent='使用'+categories[category].name+'示例';}
 function count(){$('count').textContent=$('request').value.length.toLocaleString('zh-CN')+' / 12,000';}
 function clearFeedback(){for(const id of ['request','answer','revision','source-links'])fieldError(id,'');for(const id of ['file-error','copy-status','revision-status'])announce(id,'');$('copy-label').textContent='复制完整提示词';}
 function reset(){
+  dictation.cancel();announce('voice-status','');announce('voice-overflow','');
   category='report';answers={};files=[];links=[];revision='';question=null;frozenRequest='';frozenCategory='';dirty=false;
   for(const id of ['request','answer','result','revision','format','style','source-links'])$(id).value='';
   document.querySelector('.preferences').open=false;
@@ -70,7 +81,7 @@ function generate(){
   }else{stage('result');writeDraft();$('result-title').focus();}
 }
 $('request-form').onsubmit=event=>{
-  event.preventDefault();if(reading)return;
+  event.preventDefault();if(reading||dictating)return;
   if(!$('request').value.trim()){fieldError('request','先说说你想完成什么任务。');return;}
   try{links=parseSourceLinks($('source-links').value);fieldError('source-links','');}
   catch(error){document.querySelector('.preferences').open=true;fieldError('source-links',error.message);return;}
@@ -92,12 +103,26 @@ $('new-task').onclick=()=>requestReplacement(reset);
 document.querySelectorAll('[data-example]').forEach(b=>b.onclick=()=>requestReplacement(()=>{
   reset();category=b.dataset.example;$('request').value=categories[category].sample;dirty=true;renderCategories();count();$('request').focus();
 },true));
+$('use-scenario').onclick=()=>requestReplacement(()=>{const selected=category;reset();category=selected;$('request').value=categories[category].sample;dirty=true;renderCategories();count();$('request').focus();},true);
+$('voice').onclick=()=>{
+ if(dictating){dictation.stop();return;}
+ if(!Recognition||!window.isSecureContext){announce('voice-status','此浏览器暂不支持网页语音识别。手机可使用输入法上的麦克风按钮；也可在支持语音识别的HTTPS浏览器中打开本站。');return;}
+ $('voice-online').checked=false;announce('voice-dialog-error','');$('voice-dialog').showModal();
+};
+$('voice-cancel').onclick=()=>$('voice-dialog').close();
+$('voice-begin').onclick=()=>{
+ let local=false;try{local='processLocally' in new Recognition();}catch{}
+ if(!local&&!$('voice-online').checked){announce('voice-dialog-error','此浏览器无法保证本机识别。若要继续，请明确勾选允许在线识别；否则可取消并使用输入法语音。');return;}
+ $('voice-dialog').close();dictation.start({allowRemote:$('voice-online').checked});
+};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&dictating){dictation.cancel();announce('voice-status','页面已切到后台，语音输入已停止。');}});
+window.addEventListener('pagehide',()=>dictation.cancel());
 $('cancel-replace').onclick=()=>{pendingReplacement=null;$('replace-dialog').close();};
 $('confirm-replace').onclick=()=>{const action=pendingReplacement;pendingReplacement=null;$('replace-dialog').close();action?.();};
 $('replace-dialog').addEventListener('cancel',()=>{pendingReplacement=null;});
 $('attach').onclick=()=>$('file-input').click();
 $('file-input').onchange=async event=>{
-  reading=true;const controls=[$('start'),$('new-task'),$('attach'),...document.querySelectorAll('[data-example]')];
+  reading=true;const controls=[$('start'),$('new-task'),$('attach'),$('voice'),$('use-scenario'),...document.querySelectorAll('[data-example]')];
   controls.forEach(b=>b.disabled=true);$('attach-label').textContent='正在读取资料…';$('attach').setAttribute('aria-busy','true');
   const errors=[];
   try{

@@ -8,6 +8,7 @@ export function nextQuestion(request,category,answers){
  if(category==='research'&&!answers.topic&&/^(总结|查找|检索)?(一下)?(最新)?(行业)?(消息|新闻|动态)[。！]?$/u.test(request.replace(/\s/g,'')))return {key:'topic',text:'你希望关注哪个领域？',options:['人工智能','新能源汽车','消费与零售','帮我决定']};
  return null;
 }
+export function scenarioExample(category){return '例如：'+(categories[category]||categories.report).sample;}
 export function validateFile(file){if(!/\.(txt|md|csv)$/i.test(file.name))return '此预览仅支持 TXT、Markdown 和 CSV，其他格式尚未接入。';if(file.size>200000)return '单个文件上限为 200 KB，请使用较小的文本资料。';return null;}
 export function parseSourceLinks(text=''){
  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);

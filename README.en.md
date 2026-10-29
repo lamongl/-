@@ -6,6 +6,8 @@ An experimental open-source Codex Skill for everyday reports, documents, present
 
 Web v0.3 builds prompts locally with optional format/style preferences, existing source links and text attachments. Copy, TXT download and supported native text sharing are available, without accounts or input uploads. It does not run an AI model. [Features and release checks](docs/web-v0.3.md).
 
+Web v0.4 adds distinct scenario examples and Chinese browser dictation. On-device recognition is requested by default; remote recognition requires opt-in and may send audio to the browser's service. This site stores no recordings. [Compatibility and validation limits](docs/web-v0.4.md).
+
 ## Install in Codex
 
 Download the Skill ZIP from Releases. Extract the `prompt-workbench` folder into `~/.codex/skills/`, then start a new turn and invoke `$prompt-workbench` with your request. You can also ask Codex's skill-installer to install `skills/prompt-workbench` from this repository.
