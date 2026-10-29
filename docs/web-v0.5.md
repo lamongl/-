@@ -1,3 +1,5 @@
+> 历史版本，已撤回。v0.6已移除密钥输入和模型调用，当前网页版只生成提示词。请以 [v0.6说明](web-v0.6.md) 为准。 Historical version: API integration removed in v0.6.
+
 # 网页版 v0.5：用户自带火山方舟密钥
 
 访问：https://lamongl.github.io/-/

@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src https://ark.cn-beijing.volces.com; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f4f6f3">
   <meta name="description" content="在浏览器本地整理办公提示词，支持报表、文档、PPT和摘要需求，复制、下载或分享文本。Local-first office prompt builder. No AI connection required.">
@@ -29,7 +29,7 @@
       <p>从报表到文档，说说你的任务，整理出一份可以交给 AI 的提示词。</p>
       <p class="english-intro" lang="en">Turn an office task and your materials into one ready-to-use prompt. Built locally in your browser.</p>
     </section>
-    <div class="mode-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>默认在本地免费整理。</strong><span> 也可填入你自己的火山方舟 API Key，主动调用模型优化提示词或生成正文。</span></p></div>
+    <div class="mode-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>网页版使用本地规则整理，未连接 AI。</strong><span> 可直接复制或导出；需要 AI 完成任务时，可在支持的宿主安装 Skill。</span></p></div>
     <nav class="project-links" aria-label="项目与安装">
       <a href="https://github.com/lamongl/-/releases/tag/skill-v0.1.0">下载 / Download ↗</a>
       <a href="https://github.com/lamongl/-/blob/main/docs/skill-release.md">安装 / Install ↗</a>
@@ -37,7 +37,6 @@
       <a href="https://github.com/lamongl/-/issues">反馈 / Issues ↗</a>
     </nav>
     <noscript><p class="field-error">需要启用 JavaScript 才能在本地整理提示词。你仍可通过上方链接查看源码、安装说明和测试记录。</p></noscript>
-    <details id="ark-settings" class="ark-settings"><summary>接入我自己的豆包模型 <span>可选 · 用量由你的火山账户结算</span></summary><div class="ark-content"><p>先在官方控制台登录并创建 API Key，再填入下方。本站不代收款、不提供公共免费额度；有无赠送额度、何时收费及价格均以你的火山账户为准。</p><nav class="ark-links" aria-label="火山方舟官方入口"><a href="https://ark.volcengine.com/region:cn-beijing/apikey" target="_blank" rel="noopener noreferrer">获取我的 API Key ↗</a><a href="https://ark.volcengine.com/region:cn-beijing/openManagement" target="_blank" rel="noopener noreferrer">查看模型、额度与计费 ↗</a></nav><div class="ark-fields"><div><label for="ark-key">我的 API Key</label><input id="ark-key" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="512" placeholder="只在本页使用，不会存入历史" aria-describedby="ark-key-help"><p id="ark-key-help">仅保留在当前页面内存；刷新、离开或点击清除后需重新填写。请仅在你信任的设备和本站页面输入。</p></div><div><label for="ark-model">模型 ID / 推理接入点 ID</label><input id="ark-model" value="doubao-seed-2-1-lite-260915" autocomplete="off" spellcheck="false" maxlength="128"><label for="ark-output" class="output-label">单次输出长度上限</label><select id="ark-output"><option value="2048">较短（2048 token）</option><option value="4096" selected>标准（4096 token）</option><option value="8192">较长（8192 token，可能增加用量）</option></select></div></div><label class="ark-consent"><input id="ark-consent" type="checkbox"><span>我确认使用自己有权使用的密钥，理解点击AI按钮会将完整提示词（含附件原文及资料链接）和密钥直接发送至火山方舟；费用由该密钥所属火山账户按实际用量承担。本站不代收款，也不保证免费或自动停在免费额度内。</span></label><div class="ark-bottom"><button id="ark-clear" class="secondary" type="button">清除密钥与AI结果</button><p id="ark-status" role="status" hidden></p></div><p lang="en">Bring your own API key. Requests go directly to Volcengine; usage is billed to the key owner's account. No website top-up or key storage.</p></div></details>
     <ol class="steps" aria-label="任务流程">
       <li data-step="input" aria-current="step"><b aria-hidden="true">1</b><span>描述需求</span></li>
       <li data-step="question"><b aria-hidden="true">2</b><span>必要时补充</span></li>
@@ -77,7 +76,6 @@
           <div class="action-row"><button id="edit-input" class="quiet" type="button">返回修改需求</button><button id="copy" class="primary" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 8h12v12H8zM16 8V4H4v12h4"/></svg><span id="copy-label">复制完整提示词</span></button></div>
           <p id="copy-status" class="inline-status" role="status" hidden></p>
           <div class="export-actions"><button id="download" class="secondary" type="button">下载 TXT</button><button id="share" class="secondary" type="button" hidden>分享文本</button><span>手机可使用系统分享；不支持时可复制或下载。</span></div>
-          <section class="ai-section" aria-labelledby="ai-title"><h3 id="ai-title">用我自己的模型继续</h3><p>先在页面上方填写自己的密钥并确认费用。优化提示词与生成正文是两个独立调用，每次由你主动选择。正文生成仅使用已提供的文字，没有联网检索或文件生成工具。</p><div id="ai-actions" class="ai-actions"><button id="ai-optimize" class="primary" type="button">AI 优化提示词</button><button id="ai-execute" class="secondary" type="button">AI 生成正文</button><button id="ai-stop" class="quiet" type="button" hidden>停止等待</button></div><p id="ai-status" class="ai-status" role="status" hidden></p><div id="ai-output-block" hidden><label id="ai-output-title" for="ai-output">AI 文本</label><textarea id="ai-output" readonly></textarea><div class="ai-actions"><button id="ai-copy" class="secondary" type="button">复制AI文本</button><button id="ai-download" class="secondary" type="button">下载AI文本</button></div></div></section>
           <form id="revision-form" class="revision" novalidate><label for="revision">还想调整什么？</label><p>保留原始需求，只补充这次需要修改的地方。</p><div><input id="revision" name="revision" autocomplete="off" maxlength="2000" aria-describedby="revision-error" placeholder="例如：更简洁，但保留所有数据…"><button id="revise" class="secondary" type="submit">更新草稿</button></div><p id="revision-error" class="field-error" role="alert" hidden></p><p id="revision-status" class="inline-status" role="status" hidden></p></form>
         </section>
       </div>
@@ -93,11 +91,11 @@
         <div class="skill-note"><h3>想让 AI 直接完成任务？</h3><p>在支持自定义 Skill 的 AI 宿主中安装开源试用版，使用宿主模型工作。</p><a href="https://github.com/lamongl/-/blob/main/docs/skill-release.md">查看安装说明 ↗</a></div>
       </aside>
     </div>
-    <div class="privacy-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 10h14v10H5zM8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg><p>本地整理不发送任务资料。主动调用AI后，完整提示词、附件原文和鉴权密钥直接发送至火山方舟，按其服务与隐私规则处理；不经过本站转发服务器。本站不持久保存密钥或历史。语音由浏览器提供，在线识别需明确允许；本站不保存录音。导出或分享后的资料由接收应用处理，托管方仍会收到常规页面访问请求。</p></div>
-    <div class="validation-note"><p>质量与效率仍在验证，不承诺节省。<a href="https://github.com/lamongl/-/blob/main/docs/benchmarks/2026-10-29-quality-pilot-run/README.md">查看成品内容对照及限制 ↗</a></p><p lang="en">Quality and efficiency gains are not established. Local prompt building is free; optional AI calls use and bill your own Volcengine account.</p></div>
-    <footer><span>开源 · 无需本站账号 · 可选自带密钥</span><span>网页版 v0.5 · 2026-10-29</span></footer>
+    <div class="privacy-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 10h14v10H5zM8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg><p>任务文字和附件只在本页内存处理，不上传本站、不保存历史。语音识别由浏览器提供；仅在你明确允许在线识别时，音频可能交给浏览器的识别服务，本页不保存录音。复制、下载或主动分享后，资料由你选择的应用处理。托管方仍会收到常规访问请求。</p></div>
+    <div class="validation-note"><p>质量与效率仍在验证，不承诺节省。<a href="https://github.com/lamongl/-/blob/main/docs/benchmarks/2026-10-29-quality-pilot-run/README.md">查看成品内容对照及限制 ↗</a></p><p lang="en">Quality and efficiency gains are not established. The web app builds prompts locally; it does not run an AI model.</p></div>
+    <footer><span>开源 · 无需登录 · 不执行 AI 任务</span><span>网页版 v0.6 · 2026-10-29</span></footer>
   </main>
-  <dialog id="about-dialog" aria-labelledby="about-title"><h2 id="about-title">网页版可以做什么？</h2><p>选择场景、填写需求和文本资料，免费整理、复制或下载完整提示词。也可用自己的火山方舟密钥优化提示词或生成正文；点击AI按钮才会发起调用。</p><p>自带密钥模式将完整提示词和附件原文直接发给火山方舟，由其按密钥所属账户计费。本站不提供公共额度、不代充值，也不能保证你的调用免费。只保留当前页面内存中的密钥，不写入本地存储或网站数据库。</p><p>文本模型没有联网、读取链接、计算程序或生成文件工具，不能把文本输出当作已生成的Word/PPTX文件。不会自动生成11个候选，也未证明质量或效率优势。仅支持UTF-8的TXT、MD、CSV附件。</p><p lang="en">Build prompts locally, or explicitly call Volcengine with your own key. Your provider account pays for usage. Keys are not persisted, and model calls send your prompt and attached text to Volcengine.</p><div class="dialog-actions"><button id="close-dialog" class="primary" type="button">知道了</button></div></dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title"><h2 id="about-title">网页版可以做什么？</h2><p>选择场景、输入需求，按需补充回答；添加文本附件、格式、风格或已有资料链接，得到一份完整提示词。支持复制、下载TXT和设备允许时的系统文本分享。</p><p>本页使用规则和模板，没有调用 AI，也没有生成、评审11个候选。它不会替你执行任务、计算报表或读取链接。需要模型工作的用户可查看Skill安装说明。</p><p>仅支持UTF-8编码的TXT、MD、CSV，最多3份，每份200KB。资料原文会进入提示词，不自动压缩。输入不上传、不持久保存；导出或分享后请按接收应用的规则处理资料。</p><p lang="en">A local prompt builder, without an AI connection, accounts or input uploads. Exported content is handled by the app you choose.</p><div class="dialog-actions"><button id="close-dialog" class="primary" type="button">知道了</button></div></dialog>
   <dialog id="replace-dialog" aria-labelledby="replace-title" aria-describedby="replace-description"><h2 id="replace-title">开始新的任务？</h2><p id="replace-description">当前需求、附件与草稿会被清除。</p><div class="dialog-actions"><button id="cancel-replace" class="secondary" type="button" autofocus>保留当前内容</button><button id="confirm-replace" class="primary" type="button">开始新任务</button></div></dialog>
   <dialog id="voice-dialog" aria-labelledby="voice-title"><h2 id="voice-title">用语音填写需求</h2><p>默认尝试本机中文识别，不会静默切换到在线服务。本机模型缺失或浏览器不支持时，可以取消，使用输入法上的麦克风按钮。</p><label class="voice-consent"><input id="voice-online" type="checkbox"><span>我允许浏览器使用在线语音识别。音频可能发送给浏览器提供的识别服务，请勿口述敏感信息。</span></label><p>本站不保存录音。开始后浏览器可能请求麦克风权限；点击“结束语音输入”或切到后台即可停止。</p><p id="voice-dialog-error" class="field-error" role="alert" hidden></p><div class="dialog-actions"><button id="voice-cancel" class="secondary" type="button">取消</button><button id="voice-begin" class="primary" type="button">开始识别</button></div></dialog>
   <script type="module" src="./app.mjs"></script>

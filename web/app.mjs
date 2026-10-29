@@ -1,11 +1,9 @@
 import {categories,nextQuestion,composePreview,validateFile,parseSourceLinks,draftStats,scenarioExample} from './core.mjs';
 import {createDictation,appendDictation} from './speech.mjs';
-import {callArk} from './ark.mjs';
 const $=id=>document.getElementById(id);
 let category='report',answers={},files=[],links=[],question=null,revision='',reading=false;
 let pendingReplacement=null,frozenRequest='',frozenCategory='',dirty=false;
 let dictating=false;
-let aiController=null,aiTimer=null,aiStopReason='',aiVersion=0;
 const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
 const dictation=createDictation({Recognition,
  onText:text=>{const result=appendDictation($('request').value,text);$('request').value=result.value;dirty=true;count();fieldError('request','');if(result.overflow)announce('voice-overflow',($('voice-overflow').textContent||'未写入的完整语音文字（输入已超出12,000字符上限，请先精简或复制保留）：')+'\n'+result.overflow);},
@@ -37,7 +35,6 @@ function updateScenario(){$('request').placeholder=scenarioExample(category);$('
 function count(){$('count').textContent=$('request').value.length.toLocaleString('zh-CN')+' / 12,000';}
 function clearFeedback(){for(const id of ['request','answer','revision','source-links'])fieldError(id,'');for(const id of ['file-error','copy-status','revision-status'])announce(id,'');$('copy-label').textContent='复制完整提示词';}
 function reset(){
-  clearAIResult();
   dictation.cancel();announce('voice-status','');announce('voice-overflow','');
   category='report';answers={};files=[];links=[];revision='';question=null;frozenRequest='';frozenCategory='';dirty=false;
   for(const id of ['request','answer','result','revision','format','style','source-links'])$(id).value='';
@@ -64,7 +61,6 @@ function renderFiles(){
 }
 function updateOptionSelection(){$('options').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.textContent===$('answer').value)));}
 function writeDraft(){
-  clearAIResult();
   $('result').value=composePreview({request:$('request').value,category,answers,files,revision,format:$('format').value,style:$('style').value,links});
   const stats=draftStats($('result').value,files);
   $('result-meta').textContent=`全文 ${stats.characters.toLocaleString('zh-CN')} 字符 · ${stats.materials} 份资料原文 · ${links.length} 个链接`;
@@ -84,31 +80,6 @@ function generate(){
     $('question-text').focus();
   }else{stage('result');writeDraft();$('result-title').focus();}
 }
-function clearAIResult(){aiVersion++;if(aiController)aiController.abort();clearTimeout(aiTimer);aiController=null;$('ai-output').value='';$('ai-output-block').hidden=true;announce('ai-status','');setAIBusy(false);}
-function setAIBusy(busy){for(const id of ['ai-optimize','ai-execute','ark-key','ark-model','ark-output','ark-consent','edit-input','revise','new-task'])$(id).disabled=busy;$('ai-stop').hidden=!busy;$('ai-actions').setAttribute('aria-busy',String(busy));}
-async function runAI(mode){
- if(aiController)return;
- if(!$('ark-consent').checked){$('ark-settings').open=true;announce('ai-status','请先阅读并勾选资料发送与费用说明，再主动发起调用。');$('ark-consent').focus();return;}
- const version=++aiVersion;aiStopReason='';aiController=new AbortController();const controller=aiController;
- $('ai-output').value='';$('ai-output-block').hidden=true;setAIBusy(true);announce('ai-status','正在请求你的火山方舟模型。只发送一次，不自动重试。');
- aiTimer=setTimeout(()=>{aiStopReason='timeout';controller.abort();},90000);
- try{
-  const result=await callArk({key:$('ark-key').value,model:$('ark-model').value,prompt:$('result').value,mode,maxOutput:Number($('ark-output').value),signal:controller.signal});
-  if(version!==aiVersion)return;
-  $('ai-output-title').textContent=mode==='optimize'?'AI 优化的提示词':'AI 生成的正文';$('ai-output').value=result.text;$('ai-output-block').hidden=false;
-  const usage=result.usage?`输入 ${result.usage.prompt_tokens.toLocaleString()}、输出 ${result.usage.completion_tokens.toLocaleString()}，合计 ${result.usage.total_tokens.toLocaleString()} token。`:'服务未返回完整用量信息。';
-  announce('ai-status',(result.filtered?'内容受到服务审核限制，请核对完整性。':result.truncated?'输出达到长度上限，以下为未完成的部分结果。':'已收到模型文本，请核查事实与完整性。')+usage+' 实际费用及免费额度以你的火山方舟账户为准。');
- }catch(error){
-  if(version!==aiVersion)return;
-  announce('ai-status',error.name==='AbortError'?(aiStopReason==='timeout'?'等待超时。':'已停止等待。')+'服务端可能已处理请求并产生用量，请先查账，不要立即重复提交。':error instanceof TypeError?'无法连接火山方舟，可能是网络或跨域限制。未使用代理或替代服务，请核对账户用量后再重试。':error.message);
- }finally{if(version===aiVersion){clearTimeout(aiTimer);aiController=null;setAIBusy(false);}}
-}
-$('ai-optimize').onclick=()=>runAI('optimize');$('ai-execute').onclick=()=>runAI('execute');
-$('ai-stop').onclick=()=>{aiStopReason='manual';aiController?.abort();};
-$('ark-clear').onclick=()=>{clearAIResult();$('ark-key').value='';$('ark-consent').checked=false;announce('ark-status','已清除本页密钥和AI结果。');};
-for(const id of ['ark-key','ark-model'])$(id).addEventListener('input',()=>{$('ark-consent').checked=false;announce('ark-status','设置已修改，请重新确认费用与资料发送说明。');});
-$('ai-copy').onclick=async()=>{try{await navigator.clipboard.writeText($('ai-output').value);announce('ai-status','已复制AI文本，请在使用前核查事实。');}catch{$('ai-output').focus();$('ai-output').select();announce('ai-status','已选中AI文本，请手动复制。');}};
-$('ai-download').onclick=()=>{const url=URL.createObjectURL(new Blob([$('ai-output').value],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='prompt-workbench-ai.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('request-form').onsubmit=event=>{
   event.preventDefault();if(reading||dictating)return;
   if(!$('request').value.trim()){fieldError('request','先说说你想完成什么任务。');return;}
@@ -145,7 +116,7 @@ $('voice-begin').onclick=()=>{
  $('voice-dialog').close();dictation.start({allowRemote:$('voice-online').checked});
 };
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&dictating){dictation.cancel();announce('voice-status','页面已切到后台，语音输入已停止。');}});
-window.addEventListener('pagehide',()=>{dictation.cancel();clearAIResult();$('ark-key').value='';$('ark-consent').checked=false;});
+window.addEventListener('pagehide',()=>dictation.cancel());
 $('cancel-replace').onclick=()=>{pendingReplacement=null;$('replace-dialog').close();};
 $('confirm-replace').onclick=()=>{const action=pendingReplacement;pendingReplacement=null;$('replace-dialog').close();action?.();};
 $('replace-dialog').addEventListener('cancel',()=>{pendingReplacement=null;});

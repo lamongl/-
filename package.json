@@ -1,6 +1,6 @@
 {
   "name": "prompt-workbench",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "description": "在浏览器本地整理、复制、下载或分享办公提示词的静态工作台",
@@ -9,6 +9,6 @@
   "scripts": {
     "start": "node web/server.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node --test web/core.test.mjs web/speech.test.mjs web/ark.test.mjs scripts/build.test.mjs"
+    "test": "node --test web/core.test.mjs web/speech.test.mjs scripts/build.test.mjs"
   }
 }

@@ -4,7 +4,7 @@ An experimental open-source Codex Skill for everyday reports, documents, present
 
 [中文说明](README.md) · [Web demo](https://lamongl.github.io/-/) · [Install](docs/skill-release.md) · [Download Skill preview](https://github.com/lamongl/-/releases/tag/skill-v0.1.0) · [Benchmark pilot](docs/benchmarks/README.md)
 
-Web v0.5 adds optional direct Volcengine calls using the visitor's own API key. Keys are kept only in page memory; explicit AI actions send the full prompt and attached text to Volcengine, and the provider bills the key owner's account. No site top-up or payment collection. [Setup and validation limits](docs/web-v0.5.md).
+Web v0.6 only builds prompts locally. Copy the result into your chosen AI to carry out the task. No API key, account, top-up or model calls. Scenario examples, browser dictation, text attachments and copy/download remain. [Features and validation limits](docs/web-v0.6.md).
 
 Web v0.3 builds prompts locally with optional format/style preferences, existing source links and text attachments. Copy, TXT download and supported native text sharing are available, without accounts or input uploads. It does not run an AI model. [Features and release checks](docs/web-v0.3.md).
 
