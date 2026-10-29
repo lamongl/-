@@ -1,5 +1,9 @@
 # 有无 Skill 的初步对照测试
 
+最新成品内容对照（2026-10-29）：[四任务、8份实际成果与质量审查](2026-10-29-quality-pilot-run/README.md)。关键事实两组均正确，尚未证明整体质量提升；独立可用性评阅待完成。旧版和负面记录继续保留。
+
+Latest delivered-content pilot: [four tasks, eight complete outputs and review evidence](2026-10-29-quality-pilot-run/README.md). No overall quality advantage has been established; independent usability review is pending.
+
 2026-10-28，3个合成任务，每种方式每任务1次，共6次独立CLI会话。指定模型 `gpt-6.1-terra`，推理设置 medium。不是统计显著性试验。
 
 **结果：本轮没有测得总体提效或总token节省。总token增加 13.1%，合计耗时增加 1.0%。最终输出token减少 31.7%，但不能用输出减少宣传总消耗减少。**

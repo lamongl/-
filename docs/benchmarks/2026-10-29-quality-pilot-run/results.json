@@ -1,0 +1,131 @@
+{
+  "model_requested": "gpt-6.1-terra",
+  "effort": "medium",
+  "limit_seconds": 60,
+  "runs_planned": 8,
+  "repeats": 1,
+  "skill_sha256": "83d12e7ef45d8d66f5613dd94d0ca5c20a808c10ba2bbfac285d8aae146747ea",
+  "boundary": "content-only with injected released Skill; no file or browsing test; author review is not independent",
+  "runs": [
+    {
+      "task": "report",
+      "condition": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 18.35,
+      "usage": {
+        "input_tokens": 16218,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 243,
+        "reasoning_output_tokens": 30
+      },
+      "answer_file": "report-baseline.answer.md",
+      "tools": []
+    },
+    {
+      "task": "report",
+      "condition": "skill",
+      "status": "completed",
+      "elapsed_seconds": 15.39,
+      "usage": {
+        "input_tokens": 18409,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 280,
+        "reasoning_output_tokens": 34
+      },
+      "answer_file": "report-skill.answer.md",
+      "tools": []
+    },
+    {
+      "task": "notice",
+      "condition": "skill",
+      "status": "completed",
+      "elapsed_seconds": 7.03,
+      "usage": {
+        "input_tokens": 18433,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 81,
+        "reasoning_output_tokens": 0
+      },
+      "answer_file": "notice-skill.answer.md",
+      "tools": []
+    },
+    {
+      "task": "notice",
+      "condition": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 9.39,
+      "usage": {
+        "input_tokens": 16242,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 80,
+        "reasoning_output_tokens": 0
+      },
+      "answer_file": "notice-baseline.answer.md",
+      "tools": []
+    },
+    {
+      "task": "slides",
+      "condition": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 22.75,
+      "usage": {
+        "input_tokens": 16262,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1244,
+        "reasoning_output_tokens": 0
+      },
+      "answer_file": "slides-baseline.answer.md",
+      "tools": []
+    },
+    {
+      "task": "slides",
+      "condition": "skill",
+      "status": "completed",
+      "elapsed_seconds": 24.42,
+      "usage": {
+        "input_tokens": 18453,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1248,
+        "reasoning_output_tokens": 0
+      },
+      "answer_file": "slides-skill.answer.md",
+      "tools": []
+    },
+    {
+      "task": "sources",
+      "condition": "skill",
+      "status": "completed",
+      "elapsed_seconds": 9.42,
+      "usage": {
+        "input_tokens": 18559,
+        "cached_input_tokens": 12416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 232,
+        "reasoning_output_tokens": 0
+      },
+      "answer_file": "sources-skill.answer.md",
+      "tools": []
+    },
+    {
+      "task": "sources",
+      "condition": "baseline",
+      "status": "completed",
+      "elapsed_seconds": 13.95,
+      "usage": {
+        "input_tokens": 16368,
+        "cached_input_tokens": 14976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 202,
+        "reasoning_output_tokens": 0
+      },
+      "answer_file": "sources-baseline.answer.md",
+      "tools": []
+    }
+  ]
+}

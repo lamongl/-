@@ -1,0 +1,57 @@
+{
+  "totals": {
+    "baseline": {
+      "input_tokens_including_cache": 65090,
+      "output_tokens": 1769,
+      "elapsed_seconds": 64.44,
+      "completed_under_60_seconds": 4,
+      "total_tokens": 66859
+    },
+    "skill": {
+      "input_tokens_including_cache": 73854,
+      "output_tokens": 1841,
+      "elapsed_seconds": 56.26,
+      "completed_under_60_seconds": 4,
+      "total_tokens": 75695
+    }
+  },
+  "skill_total_token_increase_pct": 13.22,
+  "skill_observed_walltime_reduction_pct": 12.69,
+  "lengths": [
+    {
+      "answer": "report-baseline.answer.md",
+      "nonwhitespace_characters_including_markdown": 280
+    },
+    {
+      "answer": "report-skill.answer.md",
+      "nonwhitespace_characters_including_markdown": 328
+    },
+    {
+      "answer": "notice-skill.answer.md",
+      "nonwhitespace_characters_including_markdown": 116
+    },
+    {
+      "answer": "notice-baseline.answer.md",
+      "nonwhitespace_characters_including_markdown": 112
+    },
+    {
+      "answer": "slides-baseline.answer.md",
+      "nonwhitespace_characters_including_markdown": 1703
+    },
+    {
+      "answer": "slides-skill.answer.md",
+      "nonwhitespace_characters_including_markdown": 1731
+    },
+    {
+      "answer": "sources-skill.answer.md",
+      "nonwhitespace_characters_including_markdown": 323
+    },
+    {
+      "answer": "sources-baseline.answer.md",
+      "nonwhitespace_characters_including_markdown": 274
+    }
+  ],
+  "independent_review_completed": false,
+  "quality_improvement_percent": null,
+  "warning": "One run per task; author review only; content-only. Counts/lengths/time are not overall quality scores."
+}
