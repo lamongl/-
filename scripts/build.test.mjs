@@ -21,7 +21,8 @@ test('发布仅包含白名单文件，资源可在仓库子路径加载',async(
       assert.ok(url.pathname.startsWith('/prompt-workbench/'),'资源必须使用相对路径：'+asset);
       assert.ok(publicFiles.includes(asset.replace(/^\.\//,'')));
     }
-    assert.ok(html.includes('connect-src &#39;none&#39;')||html.includes("connect-src 'none'"));
+    assert.ok(html.includes('connect-src https://ark.cn-beijing.volces.com;'));
+    assert.ok(html.includes('type="password" autocomplete="off"'));
     await writeFile(new URL('private.txt',output),'must not publish');
     await assert.rejects(build(output),/非白名单/);
   }finally{await rm(path,{recursive:true,force:true});}

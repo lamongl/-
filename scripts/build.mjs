@@ -2,7 +2,7 @@ import {mkdir,copyFile,writeFile,readdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 
-export const publicFiles=['index.html','style.css','app.mjs','core.mjs','speech.mjs','favicon.svg'];
+export const publicFiles=['index.html','style.css','app.mjs','core.mjs','speech.mjs','ark.mjs','favicon.svg'];
 export async function build(output=new URL('../dist/',import.meta.url)){
   await mkdir(output,{recursive:true});
   // Fail closed rather than accidentally publishing stale or private files.

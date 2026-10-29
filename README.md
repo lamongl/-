@@ -10,7 +10,7 @@
 
 Open-source office-work Skill for reports, documents, presentation content and research summaries. The host AI clarifies only necessary details, reviews candidate plans and delivers the requested output. The website offers a separate template-based interaction demo.
 
-**网页版是交互演示：使用本地规则和模板，尚未连接 AI。网页版没有实现 11 候选生成、评分或任务执行。**
+**网页版默认免费使用本地规则整理；v0.5新增用户自带火山方舟API Key，主动调用模型优化提示词或生成正文。用量由密钥所属火山账户结算，本站不代收款。没有11候选评审或文件制作工具。** [接入方式与验证范围](docs/web-v0.5.md)。
 
 网页版v0.3支持可选格式/风格、已有资料链接、文本附件、全文复制、TXT下载及设备支持时的系统分享。无需登录，输入不上传、不保存历史。[功能与发布验证](docs/web-v0.3.md)。
 
