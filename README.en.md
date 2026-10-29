@@ -4,6 +4,8 @@ An experimental open-source Codex Skill for everyday reports, documents, present
 
 [中文说明](README.md) · [Web demo](https://lamongl.github.io/-/) · [Install](docs/skill-release.md) · [Download Skill preview](https://github.com/lamongl/-/releases/tag/skill-v0.1.0) · [Benchmark pilot](docs/benchmarks/README.md)
 
+Web v0.3 builds prompts locally with optional format/style preferences, existing source links and text attachments. Copy, TXT download and supported native text sharing are available, without accounts or input uploads. It does not run an AI model. [Features and release checks](docs/web-v0.3.md).
+
 ## Install in Codex
 
 Download the Skill ZIP from Releases. Extract the `prompt-workbench` folder into `~/.codex/skills/`, then start a new turn and invoke `$prompt-workbench` with your request. You can also ask Codex's skill-installer to install `skills/prompt-workbench` from this repository.

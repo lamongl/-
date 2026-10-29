@@ -6,8 +6,12 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f4f6f3">
-  <meta name="description" content="Prompt Workbench：开源办公 Skill 与网页演示。Reports, documents, presentations and research summaries with fewer unnecessary questions.">
-  <title>提示词助手 · 工作台预览</title>
+  <meta name="description" content="在浏览器本地整理办公提示词，支持报表、文档、PPT和摘要需求，复制、下载或分享文本。Local-first office prompt builder. No AI connection required.">
+  <meta property="og:title" content="提示词助手 · Prompt Workbench">
+  <meta property="og:description" content="整理需求与资料，带走一份完整提示词。A local-first office prompt builder.">
+  <meta property="og:type" content="website">
+  <title>提示词助手 · Prompt Workbench</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -17,22 +21,22 @@
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6zM10 9h4M10 13h4M10 17h2"/></svg></span>
       <span>提示词助手<small>把需求整理成行动</small></span>
     </div>
-    <div class="top-actions"><span class="preview-badge"><span aria-hidden="true"></span>交互预览</span><button id="about" class="quiet" type="button">使用说明</button><button id="new-task" class="secondary" type="button"><span aria-hidden="true">＋</span> 新建任务</button></div>
+    <div class="top-actions"><span class="preview-badge"><span aria-hidden="true"></span>本地整理</span><button id="about" class="quiet" type="button">使用说明</button><button id="new-task" class="secondary" type="button"><span aria-hidden="true">＋</span> 新建任务</button></div>
   </header>
   <main id="main" tabindex="-1">
     <section class="intro" aria-labelledby="page-title">
       <h1 id="page-title">把想做的事，说清楚。</h1>
       <p>从报表到文档，说说你的任务，整理出一份可以交给 AI 的提示词。</p>
+      <p class="english-intro" lang="en">Turn an office task and your materials into one ready-to-use prompt. Built locally in your browser.</p>
     </section>
-    <div class="mode-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>当前是交互演示，尚未连接 AI。</strong><span> 草稿由模板整理，不代表正式生成效果。</span></p></div>
+    <div class="mode-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>网页版使用本地规则整理，未连接 AI。</strong><span> 可直接复制或导出；需要 AI 完成任务时，可在支持的宿主安装 Skill。</span></p></div>
     <nav class="project-links" aria-label="项目与安装">
       <a href="https://github.com/lamongl/-/releases/tag/skill-v0.1.0">下载 / Download ↗</a>
       <a href="https://github.com/lamongl/-/blob/main/docs/skill-release.md">安装 / Install ↗</a>
       <a href="https://github.com/lamongl/-/blob/main/docs/benchmarks/README.md">对照测试 / Benchmark ↗</a>
       <a href="https://github.com/lamongl/-/issues">反馈 / Issues ↗</a>
     </nav>
-    <p class="benchmark-note">实验项目：目前未证明输出质量提高或整体提效。对照结果、原始输出与限制均公开，不承诺节省。</p>
-    <p class="benchmark-note" lang="en">Experimental project: quality and efficiency gains are not established. Compare the complete outputs and measurements before adopting.</p>
+    <noscript><p class="field-error">需要启用 JavaScript 才能在本地整理提示词。你仍可通过上方链接查看源码、安装说明和测试记录。</p></noscript>
     <ol class="steps" aria-label="任务流程">
       <li data-step="input" aria-current="step"><b aria-hidden="true">1</b><span>描述需求</span></li>
       <li data-step="question"><b aria-hidden="true">2</b><span>必要时补充</span></li>
@@ -45,6 +49,7 @@
             <div class="editor-top"><div><h2 id="input-title">今天要完成什么？</h2><p>选择一个场景，也可以按自己的方式描述。</p></div></div>
             <div id="categories" class="categories" role="group" aria-label="任务类型"></div>
             <div class="field-group"><label for="request">任务需求</label><textarea id="request" name="request" autocomplete="off" maxlength="12000" aria-describedby="request-help request-error" placeholder="例如：整理这份销售数据，给部门主管写一份月报，重点说明变化和需要关注的问题…"></textarea><p id="request-error" class="field-error" role="alert" hidden></p><div class="field-meta"><span id="request-help">主题、用途、格式，想到什么就写什么。</span><span id="count">0 / 12,000</span></div></div>
+            <details class="preferences"><summary>格式、风格与资料链接 <span>选填，不增加问答</span></summary><div class="preference-fields"><div><label for="format">交付格式</label><input id="format" maxlength="200" placeholder="例如：一页月报、6页PPT、Markdown"></div><div><label for="style">表达风格</label><input id="style" maxlength="200" placeholder="例如：简洁正式，适合零基础读者"></div><div class="source-field"><label for="source-links">已有资料链接</label><textarea id="source-links" maxlength="4000" rows="3" aria-describedby="source-links-help source-links-error" placeholder="https://example.com/material"></textarea><p id="source-links-help">最多5个，每行一个。请在任务需求或附件中保留关键事实；本页不会读取、上传或托管链接内容。请勿填写密码或私密访问令牌。</p><p id="source-links-error" class="field-error" role="alert" hidden></p></div></div></details>
             <div class="attachment-zone"><div class="attachment-toolbar"><button id="attach" class="attach" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 13 7-7a3 3 0 0 1 4 4l-9 9a5 5 0 0 1-7-7l9-9M7 14l8-8"/></svg><span id="attach-label">添加参考资料</span></button><span class="file-hint">TXT、MD、CSV</span></div><p class="attachment-help" id="file-help">可选，最多 3 份，每份 200 KB。文件只在本页读取。</p><input id="file-input" type="file" accept=".txt,.md,.csv" multiple aria-describedby="file-help" hidden><div id="files" class="files" aria-live="polite"></div><p id="file-error" class="field-error" role="alert" hidden></p></div>
             <div class="action-row"><p>只在关键不明确时，<br>再问你一个问题。</p><button id="start" class="primary" type="submit">整理我的需求<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
           </form>
@@ -64,8 +69,11 @@
           <div class="editor-top"><div><span class="section-kicker">整理完成</span><h2 id="result-title" tabindex="-1">你的提示词草稿</h2></div><span class="demo-tag">未经 AI 评审</span></div>
           <p class="result-note">需求与补充要求已整理在一起，可复制到目标 AI 中继续使用。</p>
           <div class="field-group result-field"><label class="sr-only" for="result">完整提示词</label><textarea id="result" name="result" readonly></textarea></div>
+          <p id="result-meta" class="result-meta" role="status"></p>
+          <p id="size-warning" class="size-warning" hidden>这份文本较长，已完整保留材料。请确认目标 AI 的输入限制；可下载 TXT 后交给支持附件的 AI。本页未估算真实 token，也没有自动删减资料。</p>
           <div class="action-row"><button id="edit-input" class="quiet" type="button">返回修改需求</button><button id="copy" class="primary" type="button"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 8h12v12H8zM16 8V4H4v12h4"/></svg><span id="copy-label">复制完整提示词</span></button></div>
           <p id="copy-status" class="inline-status" role="status" hidden></p>
+          <div class="export-actions"><button id="download" class="secondary" type="button">下载 TXT</button><button id="share" class="secondary" type="button" hidden>分享文本</button><span>手机可使用系统分享；不支持时可复制或下载。</span></div>
           <form id="revision-form" class="revision" novalidate><label for="revision">还想调整什么？</label><p>保留原始需求，只补充这次需要修改的地方。</p><div><input id="revision" name="revision" autocomplete="off" maxlength="2000" aria-describedby="revision-error" placeholder="例如：更简洁，但保留所有数据…"><button id="revise" class="secondary" type="submit">更新草稿</button></div><p id="revision-error" class="field-error" role="alert" hidden></p><p id="revision-status" class="inline-status" role="status" hidden></p></form>
         </section>
       </div>
@@ -78,12 +86,14 @@
           <button data-example="research" type="button"><span class="example-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6"/></svg></span><span><strong>整理信息摘要</strong><small>聚焦问题、检索范围与来源</small></span><span class="example-arrow" aria-hidden="true">›</span></button>
         </div>
         <div class="handoff-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><h3>最后，只带走一份提示词。</h3><p>无需比较多个版本。复制完整文本，再交给你使用的 AI。</p></div>
+        <div class="skill-note"><h3>想让 AI 直接完成任务？</h3><p>在支持自定义 Skill 的 AI 宿主中安装开源试用版，使用宿主模型工作。</p><a href="https://github.com/lamongl/-/blob/main/docs/skill-release.md">查看安装说明 ↗</a></div>
       </aside>
     </div>
-    <div class="privacy-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 10h14v10H5zM8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg><p>此预览不上传资料、不保存历史。刷新或关闭页面后，当前内容会清除。</p></div>
-    <footer><span>网页版只生成提示词，不执行任务。</span><span>交互演示 v0.2</span></footer>
+    <div class="privacy-note"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 10h14v10H5zM8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg><p>任务和附件只在本页内存处理，不上传、不保存历史。刷新后清除；复制、下载或主动分享后，资料由你选择的应用处理。访问本站时，托管方仍会收到常规访问请求。</p></div>
+    <div class="validation-note"><p>质量与效率仍在验证，不承诺节省。<a href="https://github.com/lamongl/-/blob/main/docs/benchmarks/2026-10-29-quality-pilot-run/README.md">查看成品内容对照及限制 ↗</a></p><p lang="en">Quality and efficiency gains are not established. The web app builds prompts locally; it does not run an AI model.</p></div>
+    <footer><span>开源 · 无需登录 · 不执行 AI 任务</span><span>网页版 v0.3 · 2026-10-29</span></footer>
   </main>
-  <dialog id="about-dialog" aria-labelledby="about-title"><h2 id="about-title">这份预览可以做什么？</h2><p>选择场景、输入需求、逐个补充回答，读取文本附件，复制或修改提示词草稿。</p><p>目前使用本地规则和模板，没有调用 AI，也没有执行 11 个候选的生成与评审。草稿不能代表正式模型的优化质量。</p><p>仅支持 UTF-8 编码的 TXT、MD、CSV。所有输入保留在页面内存中，刷新后清除。</p><div class="dialog-actions"><button id="close-dialog" class="primary" type="button">知道了</button></div></dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title"><h2 id="about-title">网页版可以做什么？</h2><p>选择场景、输入需求，按需补充回答；添加文本附件、格式、风格或已有资料链接，得到一份完整提示词。支持复制、下载TXT和设备允许时的系统文本分享。</p><p>本页使用规则和模板，没有调用 AI，也没有生成、评审11个候选。它不会替你执行任务、计算报表或读取链接。需要模型工作的用户可查看Skill安装说明。</p><p>仅支持UTF-8编码的TXT、MD、CSV，最多3份，每份200KB。资料原文会进入提示词，不自动压缩。输入不上传、不持久保存；导出或分享后请按接收应用的规则处理资料。</p><p lang="en">A local prompt builder, without an AI connection, accounts or input uploads. Exported content is handled by the app you choose.</p><div class="dialog-actions"><button id="close-dialog" class="primary" type="button">知道了</button></div></dialog>
   <dialog id="replace-dialog" aria-labelledby="replace-title" aria-describedby="replace-description"><h2 id="replace-title">开始新的任务？</h2><p id="replace-description">当前需求、附件与草稿会被清除。</p><div class="dialog-actions"><button id="cancel-replace" class="secondary" type="button" autofocus>保留当前内容</button><button id="confirm-replace" class="primary" type="button">开始新任务</button></div></dialog>
   <script type="module" src="./app.mjs"></script>
 </body>

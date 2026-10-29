@@ -1,6 +1,6 @@
-import {categories,nextQuestion,composePreview,validateFile} from './core.mjs';
+import {categories,nextQuestion,composePreview,validateFile,parseSourceLinks,draftStats} from './core.mjs';
 const $=id=>document.getElementById(id);
-let category='report',answers={},files=[],question=null,revision='',reading=false;
+let category='report',answers={},files=[],links=[],question=null,revision='',reading=false;
 let pendingReplacement=null,frozenRequest='',frozenCategory='',dirty=false;
 function announce(id,text){$(id).textContent=text;$(id).hidden=!text;}
 function fieldError(id,text){announce(id+'-error',text);$(id).setAttribute('aria-invalid',String(!!text));if(text)$(id).focus();}
@@ -23,10 +23,11 @@ function renderCategories(){
   }
 }
 function count(){$('count').textContent=$('request').value.length.toLocaleString('zh-CN')+' / 12,000';}
-function clearFeedback(){for(const id of ['request','answer','revision'])fieldError(id,'');for(const id of ['file-error','copy-status','revision-status'])announce(id,'');$('copy-label').textContent='复制完整提示词';}
+function clearFeedback(){for(const id of ['request','answer','revision','source-links'])fieldError(id,'');for(const id of ['file-error','copy-status','revision-status'])announce(id,'');$('copy-label').textContent='复制完整提示词';}
 function reset(){
-  category='report';answers={};files=[];revision='';question=null;frozenRequest='';frozenCategory='';dirty=false;
-  for(const id of ['request','answer','result','revision'])$(id).value='';
+  category='report';answers={};files=[];links=[];revision='';question=null;frozenRequest='';frozenCategory='';dirty=false;
+  for(const id of ['request','answer','result','revision','format','style','source-links'])$(id).value='';
+  document.querySelector('.preferences').open=false;
   clearFeedback();renderCategories();renderFiles();count();stage('input');
   $('input-title').tabIndex=-1;$('input-title').focus();
 }
@@ -49,7 +50,10 @@ function renderFiles(){
 }
 function updateOptionSelection(){$('options').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.textContent===$('answer').value)));}
 function writeDraft(){
-  $('result').value=composePreview({request:$('request').value,category,answers,files,revision});
+  $('result').value=composePreview({request:$('request').value,category,answers,files,revision,format:$('format').value,style:$('style').value,links});
+  const stats=draftStats($('result').value,files);
+  $('result-meta').textContent=`全文 ${stats.characters.toLocaleString('zh-CN')} 字符 · ${stats.materials} 份资料原文 · ${links.length} 个链接`;
+  $('size-warning').hidden=!stats.large;
   $('copy-label').textContent='复制完整提示词';announce('copy-status','');
 }
 function generate(){
@@ -68,6 +72,8 @@ function generate(){
 $('request-form').onsubmit=event=>{
   event.preventDefault();if(reading)return;
   if(!$('request').value.trim()){fieldError('request','先说说你想完成什么任务。');return;}
+  try{links=parseSourceLinks($('source-links').value);fieldError('source-links','');}
+  catch(error){document.querySelector('.preferences').open=true;fieldError('source-links',error.message);return;}
   fieldError('request','');
   if(frozenRequest!==$('request').value||frozenCategory!==category){answers={};revision='';announce('revision-status','');}
   frozenRequest=$('request').value;frozenCategory=category;dirty=true;generate();
@@ -81,6 +87,7 @@ for(const id of ['back','edit-input'])$(id).onclick=()=>{stage('input');$('reque
 $('request').addEventListener('input',()=>{dirty=true;count();fieldError('request','');});
 $('answer').addEventListener('input',()=>{fieldError('answer','');updateOptionSelection();});
 $('revision').addEventListener('input',()=>fieldError('revision',''));
+for(const id of ['format','style','source-links'])$(id).addEventListener('input',()=>{dirty=true;if(id==='source-links')fieldError('source-links','');});
 $('new-task').onclick=()=>requestReplacement(reset);
 document.querySelectorAll('[data-example]').forEach(b=>b.onclick=()=>requestReplacement(()=>{
   reset();category=b.dataset.example;$('request').value=categories[category].sample;dirty=true;renderCategories();count();$('request').focus();
@@ -113,6 +120,20 @@ $('copy').onclick=async()=>{
   try{await navigator.clipboard.writeText($('result').value);$('copy-label').textContent='已复制完整提示词';announce('copy-status','复制成功。可以粘贴到目标 AI 中使用；当前草稿未经 AI 评审。');}
   catch{$('result').focus();$('result').select();announce('copy-status','自动复制不可用，已选中文本，请手动复制。');}
 };
+$('download').onclick=()=>{
+  try{
+    const url=URL.createObjectURL(new Blob([$('result').value],{type:'text/plain;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;a.download='prompt-workbench.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    announce('copy-status','已发起 TXT 下载，文件包含完整提示词与资料原文。请在浏览器下载列表确认。');
+  }catch{announce('copy-status','无法下载，请复制上方完整文本。');}
+};
+$('share').hidden=typeof navigator.share!=='function';
+$('share').onclick=async()=>{
+  $('share').disabled=true;
+  try{await navigator.share({title:'提示词助手 · 完整提示词',text:$('result').value});announce('copy-status','已交给系统分享。是否发送由你选择的应用决定。');}
+  catch(error){if(error.name!=='AbortError')announce('copy-status','此设备无法分享这段文本，请复制或下载 TXT。');}
+  finally{$('share').disabled=false;}
+};
 $('revision-form').onsubmit=event=>{
   event.preventDefault();const text=$('revision').value.trim();
   if(!text){fieldError('revision','请写下需要调整的要求。');return;}
@@ -122,4 +143,3 @@ $('revision-form').onsubmit=event=>{
 $('about').onclick=()=>$('about-dialog').showModal();$('close-dialog').onclick=()=>$('about-dialog').close();
 window.addEventListener('beforeunload',event=>{if(dirty||files.length){event.preventDefault();event.returnValue='';}});
 renderCategories();count();stage('input');
-

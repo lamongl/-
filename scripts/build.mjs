@@ -2,7 +2,7 @@ import {mkdir,copyFile,writeFile,readdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 
-export const publicFiles=['index.html','style.css','app.mjs','core.mjs'];
+export const publicFiles=['index.html','style.css','app.mjs','core.mjs','favicon.svg'];
 export async function build(output=new URL('../dist/',import.meta.url)){
   await mkdir(output,{recursive:true});
   // Fail closed rather than accidentally publishing stale or private files.
@@ -14,5 +14,5 @@ export async function build(output=new URL('../dist/',import.meta.url)){
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   await build();
-  console.log('静态站点已生成：dist/（仅 5 个公开文件）');
+  console.log('静态站点已生成：dist/（仅 '+(publicFiles.length+1)+' 个公开文件）');
 }

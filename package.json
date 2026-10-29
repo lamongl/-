@@ -1,9 +1,9 @@
 {
   "name": "prompt-workbench",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "面向日常办公的提示词工作台交互演示",
+  "description": "在浏览器本地整理、复制、下载或分享办公提示词的静态工作台",
   "license": "MIT",
   "engines": { "node": ">=22" },
   "scripts": {
