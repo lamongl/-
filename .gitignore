@@ -1,4 +1,5 @@
 node_modules/
+.workbench/
 dist/
 release/
 .env
@@ -9,3 +10,13 @@ release/
 Thumbs.db
 .codex/
 .agents/
+
+site-dist/
+.test-tmp/
+.taste-skill/
+experiments/
+
+site-dist/
+.taste-skill/
+.test-tmp/
+experiments/

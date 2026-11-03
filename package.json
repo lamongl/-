@@ -1,9 +1,9 @@
 {
   "name": "prompt-workbench",
-  "version": "0.7.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
-  "description": "在浏览器本地整理、复制、下载或分享办公提示词的静态工作台",
+  "description": "成品工作台：Skill、本地MCP连接器与公开介绍下载站",
   "license": "MIT",
   "engines": {
     "node": ">=22.13.0"
@@ -11,9 +11,11 @@
   "scripts": {
     "start": "node web/server.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node --test web/core.test.mjs web/speech.test.mjs web/attachments.test.mjs web/document-parser.test.mjs scripts/build.test.mjs"
+    "test": "node --test web/core.test.mjs web/speech.test.mjs web/attachments.test.mjs web/document-parser.test.mjs scripts/build.test.mjs bridge/core.test.mjs bridge/mcp.test.mjs",
+    "start:bridge": "node bridge/server.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
     "fast-xml-parser": "5.11.2",
     "fflate": "0.8.3",
     "pdfjs-dist": "6.5.438",

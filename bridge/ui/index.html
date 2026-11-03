@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>成品工作台</title><link rel="stylesheet" href="/ui.css"><script type="module" src="/ui.mjs"></script></head>
+<body>
+<header class="topbar"><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">工</span>成品工作台</a><span class="connection" id="connection">正在连接任务</span></header>
+<main>
+ <div class="intro"><p class="eyebrow">从一个想法，到一份成品</p><h1>把材料放进来，<br>把想做的事说清楚。</h1><p class="lead">AI 会理解资料、补齐关键思路，直接完成你的任务。</p></div>
+ <ol class="steps" aria-label="制作流程"><li data-step="input" aria-current="step"><b>1</b>提交材料</li><li data-step="questions"><b>2</b>确认思路</li><li data-step="working"><b>3</b>制作成品</li><li data-step="done"><b>4</b>带走成果</li></ol>
+ <details id="confirmed-brief" class="confirmed-brief" hidden><summary id="confirmed-count">已确认的思路</summary><dl id="confirmed-answers"></dl></details>
+ <div class="workspace">
+ <section class="panel" id="input-panel">
+  <form id="task-form">
+   <div class="panel-title"><h2>这次想完成什么？</h2><span>先说想法，不用写提示词</span></div>
+   <label for="request">任务需求</label><textarea id="request" maxlength="12000" required placeholder="例如：根据产品方案做一份给客户看的 PPT，希望有丰富的演示动画，重点讲清产品价值和试点结果。"></textarea>
+   <label for="output-kind">希望拿到什么</label><select id="output-kind"><option value="auto">让 AI 按任务选择</option><option value="pptx">PPT 演示文件</option><option value="docx">Word 文档</option><option value="xlsx">Excel 工作簿</option><option value="pdf">PDF 文件</option><option value="text">文本 / Markdown</option><option value="code">代码 / 项目文件</option></select>
+   <div class="dropzone" id="dropzone" role="region" aria-label="参考资料拖放区"><div class="upload-symbol" aria-hidden="true">＋</div><h3>把参考资料拖到这里</h3><p>或 <button type="button" id="choose-files" class="text-button">从电脑选择文件</button></p><small>最多 5 份，每份 20 MB · Word、Excel、PPT、PDF、TXT、MD、CSV</small><input id="files-input" type="file" accept=".docx,.xlsx,.xls,.pptx,.pdf,.txt,.md,.csv" multiple hidden></div>
+   <div id="file-list" class="file-list" aria-live="polite"></div><p class="hint">材料可以不附。扫描 PDF 请先识别文字，旧版 DOC / PPT 请转为 DOCX / PPTX。</p>
+   <p id="form-error" class="error" role="alert" hidden></p>
+   <div class="form-footer"><p>先理解材料，再分轮确认重点，<br>不用复制中间提示词。</p><button class="primary" id="submit" type="submit">交给 AI 制作 <span aria-hidden="true">→</span></button></div>
+  </form>
+ </section>
+ <section class="panel" id="questions-panel" hidden><p class="eyebrow">先把思路理清楚</p><h2>确认这一轮的重点</h2><p class="section-help">选最接近的答案，也可以补充想法或请 AI 建议。AI 会结合回答判断是否还需确认其他关键点。</p><form id="answers-form"><div id="questions"></div><p id="answer-error" class="error" role="alert" hidden></p><button class="primary" id="answer-submit" type="submit">提交这一轮回答 →</button></form></section>
+ <section class="panel status-panel" id="working-panel" hidden><span class="status-mark" aria-hidden="true">◎</span><p class="eyebrow" id="status-kicker">资料已提交</p><h2 id="status-title">等待 AI 接收任务</h2><p id="status-description">提交已保存。请保持当前 AI 对话开启；如对话已结束，回到对话说“继续完成工作台任务”。</p><div id="submitted-files" class="submitted-files"></div><p id="work-error" class="error" role="alert" hidden></p></section>
+ <section class="panel" id="done-panel" hidden><p class="eyebrow">制作完成</p><h2>你的成果已准备好。</h2><p id="delivery-note" class="section-help"></p><div id="artifacts" class="artifacts"></div><p id="download-error" class="error" role="alert" hidden></p></section>
+ <aside><h2>你负责想法，AI 负责落地。</h2><div class="side-item"><span>01</span><div><h3>先理解，再动手</h3><p>结合需求和材料整理目标，已有信息不重复问。</p></div></div><div class="side-item"><span>02</span><div><h3>把模糊想法变具体</h3><p>需要确认时给出易懂的选项，帮助你明确方向。</p></div></div><div class="side-item"><span>03</span><div><h3>最后只交付成品</h3><p>文件能下载、内容能使用；能力不足时会如实说明。</p></div></div><div class="privacy"><span aria-hidden="true">◈</span><p>材料保存在当前电脑，提交后由你当前使用的 AI 处理。必要的工具授权仍由 AI 宿主确认。</p></div></aside>
+ </div>
+ <footer>成品工作台 <span>把过程交给 AI，把成果留给你。</span></footer>
+</main></body></html>

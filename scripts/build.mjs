@@ -1,26 +1,28 @@
-import {mkdir,copyFile,writeFile,readdir,cp,readFile} from 'node:fs/promises';
-import {build as bundle} from 'esbuild';
+import {mkdir,copyFile,writeFile,readdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 
-export const publicFiles=['index.html','style.css','app.mjs','core.mjs','speech.mjs','attachments.mjs','document-parser.mjs','pdf.worker.mjs','pdf-cmaps','pdf-fonts','third-party-notices.txt','favicon.svg'];
-export async function build(output=new URL('../dist/',import.meta.url)){
-  await mkdir(output,{recursive:true});
-  // Fail closed rather than accidentally publishing stale or private files.
-  const existing=await readdir(output);
-  const unexpected=existing.filter(name=>![...publicFiles,'.nojekyll'].includes(name));
-  if(unexpected.length)throw new Error('发布目录含非白名单文件，请改用空目录：'+unexpected.join(', '));
-  for(const name of ['index.html','style.css','app.mjs','core.mjs','speech.mjs','attachments.mjs','favicon.svg'])await copyFile(new URL('../web/'+name,import.meta.url),new URL(name,output));
-  await bundle({entryPoints:[fileURLToPath(new URL('../web/document-parser.mjs',import.meta.url))],outfile:fileURLToPath(new URL('document-parser.mjs',output)),bundle:true,format:'esm',platform:'browser',target:'es2022',minify:true,legalComments:'inline'});
-  await copyFile(new URL('../node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs',import.meta.url),new URL('pdf.worker.mjs',output));
-  await cp(new URL('../node_modules/pdfjs-dist/cmaps/',import.meta.url),new URL('pdf-cmaps/',output),{recursive:true});
-  await cp(new URL('../node_modules/pdfjs-dist/standard_fonts/',import.meta.url),new URL('pdf-fonts/',output),{recursive:true});
-  const notices=[];
-  for(const [name,path] of [['fflate','fflate/LICENSE'],['fast-xml-parser','fast-xml-parser/LICENSE'],['SheetJS','xlsx/LICENSE'],['PDF.js','pdfjs-dist/LICENSE']])notices.push(name+'\n'+await readFile(new URL('../node_modules/'+path,import.meta.url),'utf8'));
-  await writeFile(new URL('third-party-notices.txt',output),notices.join('\n\n'));
-  await writeFile(new URL('.nojekyll',output),'');
+export const publicFiles=['index.html','site.css','site.mjs','assets','downloads','favicon.svg'];
+const directoryFiles={
+ assets:['with','without'].flatMap(arm=>Array.from({length:8},(_,i)=>`${arm}-${i+1}.jpg`)),
+ downloads:['with-skill.pptx','without-skill.pptx','delivery-workbench-codex-v1.1.0.zip','delivery-workbench-codex-v1.1.0.zip.sha256','comparison.md','protocol.md','blind-review.md']
+};
+export async function build(output=new URL('../site-dist/',import.meta.url)){
+ await mkdir(output,{recursive:true});
+ const unexpected=(await readdir(output)).filter(name=>![...publicFiles,'.nojekyll'].includes(name));
+ if(unexpected.length)throw new Error('发布目录含非白名单文件，请改用空目录：'+unexpected.join(', '));
+ for(const name of publicFiles){
+  const source=new URL('../site/'+name,import.meta.url),target=new URL(name,output);
+  if(directoryFiles[name]){
+   await mkdir(target,{recursive:true});
+   const extra=(await readdir(target)).filter(file=>!directoryFiles[name].includes(file));
+   if(extra.length)throw new Error('发布子目录含非白名单文件：'+extra.join(', '));
+   for(const file of directoryFiles[name])await copyFile(new URL(name+'/'+file,new URL('../site/',import.meta.url)),new URL(name+'/'+file,output));
+  }
+  else await copyFile(source,target);
+ }
+ await writeFile(new URL('.nojekyll',output),'');
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  await build();
-  console.log('静态站点已生成：dist/（仅 '+(publicFiles.length+1)+' 个公开文件）');
+ await build();console.log('成品工作台发布站点已生成：site-dist/');
 }

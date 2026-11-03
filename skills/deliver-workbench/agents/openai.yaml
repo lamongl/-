@@ -1,0 +1,9 @@
+interface:
+  display_name: "成品工作台"
+  short_description: "打开上传界面，理解材料、澄清关键思路，由当前 AI 制作并交付成品文件"
+  default_prompt: "使用 $deliver-workbench 打开成品工作台，我要提交资料并直接拿到成品。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "delivery_workbench"
+      description: "在本机连接上传界面、任务材料、追问与成品下载的工作台服务"

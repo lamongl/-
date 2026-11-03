@@ -1,32 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readdir,readFile,writeFile,rm} from 'node:fs/promises';
+import {mkdtemp,readdir,readFile,writeFile,rm,stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
-import {join} from 'node:path';
+import {join,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {build,publicFiles} from './build.mjs';
 
-test('发布仅包含白名单文件，资源可在仓库子路径加载',async()=>{
-  const path=await mkdtemp(join(tmpdir(),'prompt-publish-'));
-  const output=pathToFileURL(path+'/');
-  try{
-    await build(output);
-    assert.deepEqual((await readdir(output)).sort(),[...publicFiles,'.nojekyll'].sort());
-    const html=await readFile(new URL('index.html',output),'utf8');
-    const assets=[...html.matchAll(/(src|href)="([^"#][^"]*)"/g)].map(match=>({attribute:match[1],path:match[2]}));
-    assert.ok(assets.length>=2);
-    for(const {attribute,path:asset} of assets){
-      if(attribute==='href'&&asset.startsWith('https://'))continue;
-      const url=new URL(asset,'https://example.github.io/prompt-workbench/');
-      assert.ok(url.pathname.startsWith('/prompt-workbench/'),'资源必须使用相对路径：'+asset);
-      assert.ok(publicFiles.includes(asset.replace(/^\.\//,'').split('?')[0]));
-    }
-    assert.ok(html.includes("connect-src 'self'"));
-    assert.ok(!html.includes('ark-key')&&!html.includes('ai-execute'));
-    assert.ok(!publicFiles.includes('ark.mjs'));
-    const app=await readFile(new URL('app.mjs',output),'utf8');
-    assert.ok(!app.includes('callArk')&&!app.includes('./ark.mjs'));
-    await writeFile(new URL('private.txt',output),'must not publish');
-    await assert.rejects(build(output),/非白名单/);
-  }finally{await rm(path,{recursive:true,force:true});}
+test('新版发布仅含白名单，真实成果与资源支持仓库子路径',async()=>{
+ const folder=await mkdtemp(join(tmpdir(),'delivery-publish-')),output=pathToFileURL(folder+'/');
+ try{
+  await build(output);
+  assert.deepEqual((await readdir(output)).sort(),[...publicFiles,'.nojekyll'].sort());
+  const html=await readFile(new URL('index.html',output),'utf8');
+  for(const match of html.matchAll(/(?:src|href)="(\.[^"]*)"/g)){
+   const asset=match[1],url=new URL(asset,'https://example.github.io/-/');
+   assert.ok(url.pathname.startsWith('/-/'));
+   assert.ok((await stat(new URL(asset,output))).isFile(),'缺少资源：'+asset);
+  }
+  assert.ok(html.includes('未统计')&&html.includes('5 分 34 秒')&&html.includes('9 分 31 秒'));
+  assert.ok(!html.includes('20%')&&!html.includes('10%'));
+  for(const name of ['with-skill.pptx','without-skill.pptx','delivery-workbench-codex-v1.1.0.zip']){
+   const bytes=await readFile(new URL('downloads/'+name,output));assert.equal(bytes.subarray(0,2).toString(),'PK');assert.ok(bytes.length>10000);
+  }
+  assert.ok(!publicFiles.includes('.workbench')&&!publicFiles.includes('experiments'));
+  await writeFile(new URL('private.txt',output),'must not publish');
+  await assert.rejects(build(output),/非白名单/);
+ }finally{
+  assert.ok(resolve(folder).startsWith(resolve(tmpdir())));
+  await rm(folder,{recursive:true,force:true});
+ }
 });
