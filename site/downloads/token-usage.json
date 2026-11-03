@@ -1,0 +1,38 @@
+{
+  "measured_on": "2026-11-04",
+  "model": "gpt-6.1-sol",
+  "scope": "Per-arm artifact production model usage only; timestamp excludes control preparation before trial start.",
+  "control": {
+    "input_tokens": 1198116,
+    "cached_input_tokens": 1166848,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 9737,
+    "reasoning_output_tokens": 625,
+    "total_tokens": 1207853,
+    "uncached_input_plus_output": 41005
+  },
+  "treatment": {
+    "input_tokens": 1491611,
+    "cached_input_tokens": 1429632,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 10148,
+    "reasoning_output_tokens": 870,
+    "total_tokens": 1501759,
+    "uncached_input_plus_output": 72127
+  },
+  "change_percent": {
+    "total_tokens": 24.33,
+    "input_tokens": 24.5,
+    "cached_input_tokens": 22.52,
+    "output_tokens": 4.22,
+    "uncached_input_plus_output": 75.9
+  },
+  "limitations": [
+    "One trial per arm.",
+    "Counters sum repeated context across model turns; cached input is included in total, not added again.",
+    "Reasoning output is a subset of output and not added again.",
+    "Control pre-start preparation excluded by timestamp; prior context remains a protocol limitation.",
+    "No monetary cost inferred.",
+    "Shared setup, Skill development, review and website creation excluded."
+  ]
+}

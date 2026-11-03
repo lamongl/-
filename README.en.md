@@ -16,6 +16,6 @@ Refresh the MCP connection or start a new conversation, verify the seven tools, 
 
 Up to five input files, 20 MB each: DOCX, XLSX, XLS, PPTX, text PDF, TXT, MD and CSV. Scanned PDFs need OCR. Files are stored locally and processed by your AI host; cloud models may receive the material. Keep the host conversation active.
 
-A single matched presentation trial found a modest improvement in defence readiness, especially evidence organization and reserve Q&A. Both arms met the requirements. Observed elapsed times included tool recovery and rework; they do not establish a stable speed gain. Token consumption was not measured. [Outputs and methodology](https://lamongl.github.io/-/#results).
+A single matched presentation trial found a modest improvement in defence readiness, especially evidence organization and reserve Q&A. Both arms met the requirements. Observed elapsed times included tool recovery and rework; they do not establish a stable speed gain. Subsequent session-counter inspection does not support a token-saving claim. [Outputs and methodology](https://lamongl.github.io/-/#results).
 
 Local development: `npm ci`, `npm test`, `npm start`. Build: `npm run build` → `site-dist/`. License: MIT.

@@ -41,7 +41,7 @@ codex mcp add delivery_workbench -- <Node绝对路径> <解压目录/bridge/serv
 
 [使用Skill的PPT](https://lamongl.github.io/-/downloads/with-skill.pptx) · [未使用工作台Skill的PPT](https://lamongl.github.io/-/downloads/without-skill.pptx) · [完整记录](https://lamongl.github.io/-/downloads/comparison.md)
 
-匿名评审认为新版在答辩可用性上有小幅优势，尤其是证据组织和问答针对性。两组都满足硬性要求，视觉差距不大。单次墙钟耗时约5分34秒和9分31秒，包含工具恢复与返工，不代表稳定速度提升；Token未统计，不宣称节省比例。
+匿名评审认为新版在答辩可用性上有小幅优势，尤其是证据组织和问答针对性。两组都满足硬性要求，视觉差距不大。单次墙钟耗时约5分34秒和9分31秒，包含工具恢复与返工，不代表稳定速度提升；后续已核查实际Token记录，本轮不支持节省结论，不宣传节省比例。
 
 ## 本地开发
 
