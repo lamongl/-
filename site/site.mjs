@@ -23,6 +23,7 @@ const story=document.querySelector('.scroll-story'),hero=document.querySelector(
 const scenes=[...document.querySelectorAll('[data-scene]')],chapters=[...document.querySelectorAll('[data-chapter]')],bars=[...document.querySelectorAll('.story-progress span')];
 const clamp=n=>Math.max(0,Math.min(1,n));
 let scheduled=false,chapter=-1,lockedUntil=0,lastGesture=0,touchStart=null;
+let lastScrollY=scrollY,travelDirection=1;
 const topInset=()=>innerWidth<=650?60:68;
 function selectChapter(next){
  if(next===chapter)return;chapter=next;story.dataset.stage=String(next);
@@ -42,7 +43,7 @@ function paint(){
  const rect=story.getBoundingClientRect(),range=Math.max(1,story.offsetHeight-innerHeight+topInset());
  selectChapter(Math.round(clamp((topInset()-rect.top)/range)*2));
 }
-function schedule(){if(!scheduled&&!motion.matches){scheduled=true;requestAnimationFrame(paint);}}
+function schedule(){const y=scrollY;if(Math.abs(y-lastScrollY)>2){travelDirection=y>lastScrollY?1:-1;lastScrollY=y;}if(!scheduled&&!motion.matches){scheduled=true;requestAnimationFrame(paint);}}
 function configure(){
  document.documentElement.classList.toggle('scroll-ready',!motion.matches);chapter=-1;lockedUntil=0;
  scenes.forEach(scene=>{scene.removeAttribute('style');scene.inert=false;scene.removeAttribute('aria-hidden');});
@@ -86,25 +87,41 @@ const sectionAnimations=new Set();
 if('IntersectionObserver' in window){
  const sectionObserver=new IntersectionObserver(entries=>{
   for(const entry of entries){
-   if(!entry.isIntersecting)continue;
-   const section=entry.target;sectionObserver.unobserve(section);
-   section.dataset.animated='true';if(motion.matches||!section.animate)continue;
+   const section=entry.target;
+   if(!entry.isIntersecting){section.dataset.inView='false';continue;}
+   if(section.dataset.inView==='true')continue;
+   section.dataset.inView='true';section.dataset.animated='true';section.dataset.entries=String(Number(section.dataset.entries||0)+1);
+   const backwards=travelDirection<0;section.dataset.entryDirection=backwards?'backward':'forward';
+   if(motion.matches||!section.animate)continue;
+   if(section.classList.contains('hero')&&section.dataset.entries==='1')continue;
    const surface=section.animate([
-    {opacity:.38,transform:'translateY(58px)',clipPath:'inset(4% 0 0 round 28px)'},
-    {opacity:1,transform:'translateY(0)',clipPath:'inset(0 0 0 round 0px)'}
+    {opacity:.65,clipPath:backwards?'inset(0 0 3% round 18px)':'inset(3% 0 0 round 18px)'},
+    {opacity:1,clipPath:'inset(0 0 0 round 0px)'}
    ],{duration:1000,easing:'cubic-bezier(.22,1,.36,1)',fill:'none'});
    sectionAnimations.add(surface);surface.onfinish=()=>sectionAnimations.delete(surface);
-   const parts=section.querySelectorAll('.section-intro h2,.section-intro>p,.section-intro>div,.process li,.findings h3,.install-body h3,.promise h2,.promise-pictures img,.final-cta h2,.final-cta .button');
+   const parts=section.querySelectorAll('.hero-copy h1,.hero-copy .standfirst,.hero-actions,.section-intro h2,.section-intro>p,.section-intro>div,.process li,.findings h3,.install-body h3,.promise h2,.promise-pictures img,.final-cta h2,.final-cta .button');
    parts.forEach((part,i)=>{
-    const rest=getComputedStyle(part).transform,base=rest==='none'?'':rest;
-    const animation=part.animate([
-     {opacity:.3,transform:`translateY(${part.matches('img')?40:26}px) ${base}`},
+    const isPicture=part.matches('img'),rest=getComputedStyle(part).transform,base=rest==='none'?'':rest;
+    const frames=isPicture?[
+     {opacity:.4,transform:`translateY(${(backwards?-1:1)*32}px) ${base}`},
      {opacity:1,transform:base||'translateY(0)'}
-    ],{duration:850,delay:Math.min(i*70,280),easing:'cubic-bezier(.22,1,.36,1)',fill:'none'});
+    ]:[{opacity:.35},{opacity:1}];
+    const animation=part.animate(frames,{duration:800,delay:Math.min(i*60,240),easing:'cubic-bezier(.22,1,.36,1)',fill:'none'});
     sectionAnimations.add(animation);animation.onfinish=()=>sectionAnimations.delete(animation);
    });
   }
  },{threshold:.06});
- document.querySelectorAll('main>section:not(.hero):not(.scroll-story)').forEach(section=>sectionObserver.observe(section));
+ document.querySelectorAll('main>section:not(.scroll-story)').forEach(section=>sectionObserver.observe(section));
 }
 motion.addEventListener('change',()=>{if(motion.matches){for(const animation of sectionAnimations)animation.cancel();sectionAnimations.clear();}});
+
+document.getElementById('copy-install').onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById('install-text').textContent);document.getElementById('install-status').textContent='已复制';}catch{document.getElementById('install-status').textContent='请选中上方安装指令复制';}};
+
+const workbenchCaptions={input:'提交材料 · 写下需求，拖入参考资料',questions:'确认思路 · 选择方向，也可以自由回答',working:'制作成品 · 查看进度与已确认的回答',done:'带走成果 · 下载已完成的文件'};
+const workbenchButtons=[...document.querySelectorAll('[data-workbench-shot]')];
+for(const button of workbenchButtons)button.onclick=()=>{
+ const key=button.dataset.workbenchShot,src=`./assets/workbench-${key}.png`,preview=$('workbench-preview');
+ preview.src=src;preview.alt='实际工作台：'+workbenchCaptions[key];$('workbench-full').href=src;$('workbench-caption').textContent=workbenchCaptions[key];
+ for(const item of workbenchButtons)item.setAttribute('aria-pressed',String(item===button));
+ if(!motion.matches&&preview.animate)preview.animate([{opacity:.45},{opacity:1}],{duration:350,easing:'ease-out'});
+};

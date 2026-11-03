@@ -2,31 +2,23 @@
 
 **把材料交给当前 AI，通过必要追问直接拿到成品。**
 
-[打开产品首页](https://lamongl.github.io/-/) · [直接下载 Skill v1.1.0](https://lamongl.github.io/-/downloads/delivery-workbench-codex-v1.1.0.zip) · [安装说明](skills/deliver-workbench/references/setup.md) · [真实成果与对照记录](https://lamongl.github.io/-/#results) · [English](README.en.md)
+[打开产品首页](https://lamongl.github.io/-/) · [直接下载 Skill v1.3.0](https://lamongl.github.io/-/downloads/deliver-workbench-v1.3.0.zip) · [安装说明](skills/deliver-workbench/INSTALL.md) · [真实工作台界面](https://lamongl.github.io/-/#workbench) · [真实成果与对照记录](https://lamongl.github.io/-/#results) · [English](README.en.md)
 
 成品工作台是一个开源 Skill 与本地 MCP 连接器。用户在界面提交材料和需求，当前宿主 AI 读取材料、分轮澄清、组织内容，使用已有工具制作并检查实际文件，最终在工作台下载。无需手动复制中间提示词。
 
-网页是产品介绍、成果展示和安装入口；安装后的本地工作台才连接当前 AI。首个完整验证宿主是 Codex 桌面端。模型和额度由宿主提供，本项目不提供免费算力或跨平台登录授权。
+网页是产品介绍、成果展示和安装入口；安装后的本地工作台才连接当前 AI。Codex、腾讯 WorkBuddy、豆包与 DeepSeek 的 Agent 环境均已完成开发者实测（兼容性测试情况由用户确认），具体安装方式与功能取决于对应工具版本。模型和额度由宿主提供，本项目不提供免费算力或跨平台登录授权。
 
-## 安装
+## 安装：一个包交给 Agent
 
-需要 Node.js 22.13+，以及可使用 stdio MCP、本地文件和目标格式制作工具的 AI 宿主。
-
-1. [下载 ZIP](https://lamongl.github.io/-/downloads/delivery-workbench-codex-v1.1.0.zip)，将解压后的 `deliver-workbench` 放入 `~/.codex/skills/`。
-2. 在该目录运行 `npm ci`。
-3. 用本机真实绝对路径配置：
+下载通用ZIP，不需要选平台。将整个包发给能读写文件、执行命令的Agent，告诉它：
 
 ```text
-codex mcp add delivery_workbench -- <Node绝对路径> <解压目录/bridge/server.mjs绝对路径>
+请读取压缩包里的 INSTALL.md，帮我在你当前使用的工具中安装成品工作台。
 ```
 
-刷新 MCP 连接或新开会话，确认 7 个工作台工具可用，再说：
+Agent会识别当前工具，安装依赖、Skill和本地连接器，并执行自检。需要刷新连接或新开会话时，会给出最后一步。安装后说“使用成品工作台，我要上传材料并直接拿到成品”。
 
-```text
-使用 $deliver-workbench 打开成品工作台，我要上传材料并直接拿到成品。
-```
-
-[完整接入说明](skills/deliver-workbench/references/setup.md) · [功能与边界](docs/delivery-workbench.md)
+[Agent安装入口](skills/deliver-workbench/INSTALL.md) · [手动安装说明](skills/deliver-workbench/references/setup.md) · [功能与边界](docs/delivery-workbench.md)
 
 ## 支持范围
 
