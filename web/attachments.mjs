@@ -1,17 +1,26 @@
-import {validateFile} from './core.mjs';
+import {validateFile} from './core.mjs?v=0.7.0';
 
 export async function readAttachments(incoming,existingCount=0){
   const accepted=[],errors=[];
   for(const file of incoming){
     const issue=validateFile(file);
     if(issue){errors.push(file.name+'：'+issue);continue;}
-    if(existingCount+accepted.length>=3){errors.push('最多添加 3 份资料，请先移除已有资料。');break;}
+    if(existingCount+accepted.length>=5){errors.push('最多添加 5 份资料，请先移除已有资料。');break;}
     try{
-      const text=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());
+      const plain=/\.(txt|md|csv)$/i.test(file.name);
+      let text;
+      if(plain){
+        try{text=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());}
+        catch{throw Error('请使用 UTF-8 编码的文本文件。');}
+      }else{
+        const {extractDocumentText}=await import('./document-parser.mjs?v=0.7.0');
+        text=await extractDocumentText(file);
+      }
       if(text.includes('\0'))throw Error('binary');
       if(!text.trim()){errors.push(file.name+'：文件为空。');continue;}
+      if(text.length>1_000_000)throw Error('提取文字超过 100 万字符，请拆分文件后再读取。');
       accepted.push({name:file.name,text});
-    }catch{errors.push(file.name+'：无法读取，请使用 UTF-8 编码的文本文件。');}
+    }catch(error){errors.push(file.name+'：读取失败。'+(error.message==='binary'?'文件包含二进制内容。':error.message||'请确认文件未损坏、未加密。'));}
   }
   return {accepted,errors};
 }

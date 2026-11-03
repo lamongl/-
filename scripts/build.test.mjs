@@ -19,9 +19,9 @@ test('发布仅包含白名单文件，资源可在仓库子路径加载',async(
       if(attribute==='href'&&asset.startsWith('https://'))continue;
       const url=new URL(asset,'https://example.github.io/prompt-workbench/');
       assert.ok(url.pathname.startsWith('/prompt-workbench/'),'资源必须使用相对路径：'+asset);
-      assert.ok(publicFiles.includes(asset.replace(/^\.\//,'')));
+      assert.ok(publicFiles.includes(asset.replace(/^\.\//,'').split('?')[0]));
     }
-    assert.ok(html.includes('connect-src &#39;none&#39;')||html.includes("connect-src 'none'"));
+    assert.ok(html.includes("connect-src 'self'"));
     assert.ok(!html.includes('ark-key')&&!html.includes('ai-execute'));
     assert.ok(!publicFiles.includes('ark.mjs'));
     const app=await readFile(new URL('app.mjs',output),'utf8');

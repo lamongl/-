@@ -4,7 +4,9 @@ An experimental open-source Codex Skill for everyday reports, documents, present
 
 [中文说明](README.md) · [Web demo](https://lamongl.github.io/-/) · [Install](docs/skill-release.md) · [Download Skill preview](https://github.com/lamongl/-/releases/tag/skill-v0.1.0) · [Benchmark pilot](docs/benchmarks/README.md)
 
-Web v0.6 only builds prompts locally. Copy the result into your chosen AI to carry out the task. No API key, account, top-up or model calls. Scenario examples, browser dictation, text attachments and copy/download remain. [Features and validation limits](docs/web-v0.6.md).
+Web v0.7 adds local Word (DOCX), Excel (XLSX/XLS), PowerPoint (PPTX), text PDF and UTF-8 TXT/MD/CSV reading. Drop or select up to 5 files, 20 MB each. Extracted text and tables enter the prompt; images, charts and original layout are not interpreted. Scanned PDFs need OCR first, and legacy DOC/PPT files need conversion. The per-file extracted-text limit is one million characters; oversized content is rejected instead of silently truncated. [Features and validation limits](docs/web-v0.7.md).
+
+The web app only builds prompts locally. Copy the result into your chosen AI to carry out the task. No API key, account, top-up or model calls. Scenario examples, browser dictation and copy/download remain.
 
 Web v0.3 builds prompts locally with optional format/style preferences, existing source links and text attachments. Copy, TXT download and supported native text sharing are available, without accounts or input uploads. It does not run an AI model. [Features and release checks](docs/web-v0.3.md).
 
@@ -39,3 +41,4 @@ Each task/mode was run only once. Cache/network conditions varied, human effort 
 The website is a separate local-rules demonstration, not a live model service. Cloud hosts may process your input. No project API key, analytics or automatic document upload is included in the Skill.
 
 MIT licensed. Use synthetic or redacted data when opening an issue.
+

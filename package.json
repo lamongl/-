@@ -1,14 +1,25 @@
 {
   "name": "prompt-workbench",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "description": "在浏览器本地整理、复制、下载或分享办公提示词的静态工作台",
   "license": "MIT",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "start": "node web/server.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node --test web/core.test.mjs web/speech.test.mjs web/attachments.test.mjs scripts/build.test.mjs"
+    "test": "node --test web/core.test.mjs web/speech.test.mjs web/attachments.test.mjs web/document-parser.test.mjs scripts/build.test.mjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "5.11.2",
+    "fflate": "0.8.3",
+    "pdfjs-dist": "6.5.438",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

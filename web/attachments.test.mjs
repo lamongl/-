@@ -11,13 +11,20 @@ test('拖入的中文资料被读取并完整进入提示词',async()=>{
   assert.ok(composePreview({request:'分析变化',category:'report',files:accepted}).includes('日期,销售额\n11月,120'));
 });
 
-test('坏文件不阻止后续有效文件，已有附件也计入三份上限',async()=>{
+test('200KB以上文件可读取，单批最多成功接收五份',async()=>{
+ const incoming=[new File(['大'.repeat(100001)],'large.txt'),...Array.from({length:5},(_,i)=>new File(['内容'],'file'+i+'.txt'))];
+ const {accepted,errors}=await attachments.readAttachments(incoming);
+ assert.equal(accepted.length,5);assert.equal(accepted[0].text.length,100001);
+ assert.equal(errors.length,1);assert.match(errors[0],/5/);
+});
+
+test('坏文件不阻止后续有效文件，已有附件也计入五份上限',async()=>{
   assert.equal(typeof attachments.readAttachments,'function');
   const {accepted,errors}=await attachments.readAttachments([
     new File(['x'],'a.pdf'),new File([''],'empty.txt'),new File([new Uint8Array([255])],'bad.txt'),
-    new File(['a\0b'],'binary.txt'),new File(['x'.repeat(200001)],'large.txt'),
+    new File(['a\0b'],'binary.txt'),{name:'large.txt',size:20*1024*1024+1},
     new File(['有效'],'ok.md'),new File(['超出'],'extra.txt')
-  ],2);
+  ],4);
   assert.deepEqual(accepted,[{name:'ok.md',text:'有效'}]);
   assert.equal(errors.length,6);
 });

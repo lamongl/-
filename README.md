@@ -53,15 +53,16 @@ All three conditions met the explicit requirements in 6/6 text outputs; no quali
 ## 功能
 
 - 四类任务入口，逐个询问缺少的关键信息。
-- 拖入附件区或点击选择，本地读取 UTF-8 TXT、MD、CSV：最多 3 份，每份 200 KB；读取后原文纳入提示词。
+- 拖入附件区或点击选择，本地读取 Word（DOCX）、Excel（XLSX/XLS）、PPT（PPTX）、文字 PDF 和 UTF-8 TXT、MD、CSV：最多 5 份，每份 20 MB。提取文字与表格进入提示词，不保留图片、图表和原排版；扫描 PDF 需先 OCR，旧版 DOC/PPT 需转换。单份提取文字上限100万字符，超限提示拆分，不截断。
 - 将资料原文、任务和修改要求合并成一份可复制的提示词草稿。
 - 返回修改保留已有回答；新建任务前保护未保存内容。
 
 ## 本地运行
 
-需要 Node.js 22 或更高版本，无第三方运行依赖，无需 npm install。
+需要 Node.js 22.13 或更高版本；首次运行先安装锁定的解析与构建依赖。文件在浏览器本地解析，PDF 字体及字符映射从本站加载，不上传文档。
 
 ```sh
+npm ci
 npm start
 ```
 

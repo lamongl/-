@@ -9,7 +9,13 @@ export function nextQuestion(request,category,answers){
  return null;
 }
 export function scenarioExample(category){return '例如：'+(categories[category]||categories.report).sample;}
-export function validateFile(file){if(!/\.(txt|md|csv)$/i.test(file.name))return '此预览仅支持 TXT、Markdown 和 CSV，其他格式尚未接入。';if(file.size>200000)return '单个文件上限为 200 KB，请使用较小的文本资料。';return null;}
+export function validateFile(file){
+ if(/\.doc$/i.test(file.name))return '旧版 Word .doc 请先另存为 .docx 再导入。';
+ if(/\.ppt$/i.test(file.name))return '旧版 PPT .ppt 请先另存为 .pptx 再导入。';
+ if(!/\.(txt|md|csv|docx|xlsx|xls|pptx|pdf)$/i.test(file.name))return '支持 TXT、MD、CSV、Word（docx）、Excel（xlsx/xls）、PPT（pptx）和 PDF。';
+ if(file.size>20*1024*1024)return '单个文件上限为 20 MB，请拆分或压缩后再导入。';
+ return null;
+}
 export function parseSourceLinks(text=''){
  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
  if(lines.length>5)throw new Error('最多添加 5 个资料链接，每行一个。');

@@ -1,5 +1,5 @@
-import {categories,nextQuestion,composePreview,parseSourceLinks,draftStats,scenarioExample} from './core.mjs';
-import {readAttachments,bindFileDrop} from './attachments.mjs';
+import {categories,nextQuestion,composePreview,parseSourceLinks,draftStats,scenarioExample} from './core.mjs?v=0.7.0';
+import {readAttachments,bindFileDrop} from './attachments.mjs?v=0.7.0';
 import {createDictation,appendDictation} from './speech.mjs';
 const $=id=>document.getElementById(id);
 let category='report',answers={},files=[],links=[],question=null,revision='',reading=false;
