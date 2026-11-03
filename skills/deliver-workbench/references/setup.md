@@ -1,5 +1,9 @@
 # 连接器接入
 
+1.3.0在调用Skill创建任务时自动请求打开工作台窗口。Windows优先使用Edge或Chrome的独立应用窗口，macOS/Linux有相应浏览器时使用同样模式，否则尝试默认浏览器；没有桌面打开能力时由AI宿主打开返回链接。它不是网页中自动触发的 `window.open`，不依赖网页弹窗权限。需要无窗口运行或安装自检时设置 `WORKBENCH_OPEN_WINDOW=0`。更新后应刷新MCP连接或按宿主要求重启，使服务加载新代码。
+
+通用包由当前Agent安装：先读包内 [INSTALL.md](../INSTALL.md)，识别当前工具，再安装Skill和stdio MCP连接器。用户不需要选择平台包。
+
 Skill依赖本项目的本地连接器，不使用模型API或腾讯OAuth。首先需要本机Node.js 22.13+，在项目根目录运行 `npm ci`。
 
 Codex使用当前官方支持的stdio MCP配置。命令中的Node和服务脚本应使用本机真实绝对路径：

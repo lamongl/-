@@ -7,18 +7,19 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills/deliver-workbench"
 FILES = {
+    "INSTALL.md": SKILL / "INSTALL.md",
     "SKILL.md": SKILL / "SKILL.md",
     "agents/openai.yaml": SKILL / "agents/openai.yaml",
     "references/setup.md": SKILL / "references/setup.md",
     "references/quality.md": SKILL / "references/quality.md",
     "LICENSE": ROOT / "LICENSE",
 }
-for relative in ["bridge/core.mjs", "bridge/server.mjs", "bridge/ui/index.html",
+for relative in ["bridge/core.mjs", "bridge/server.mjs", "bridge/window.mjs", "bridge/ui/index.html",
                  "bridge/ui/ui.mjs", "bridge/ui/ui.css", "web/core.mjs",
-                 "web/attachments.mjs", "web/document-parser.mjs"]:
+                 "web/attachments.mjs", "web/document-parser.mjs", "scripts/verify-install.mjs"]:
     FILES[relative] = ROOT / relative
 
-version = "1.1.0"
+version = "1.3.0"
 source = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
 manifest = {"name": "delivery-workbench", "version": version, "private": True,
             "type": "module", "license": "MIT", "engines": source["engines"],
@@ -29,7 +30,7 @@ lock["name"] = manifest["name"]
 lock["version"] = version
 lock["packages"][""] = {key: manifest[key] for key in
                          ["name", "version", "license", "dependencies", "engines"]}
-output = ROOT / "release" / f"delivery-workbench-codex-v{version}.zip"
+output = ROOT / "release" / f"deliver-workbench-v{version}.zip"
 output.parent.mkdir(exist_ok=True)
 prefix = "deliver-workbench/"
 with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:

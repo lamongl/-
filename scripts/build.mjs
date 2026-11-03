@@ -5,7 +5,7 @@ import {resolve} from 'node:path';
 export const publicFiles=['index.html','site.css','site.mjs','assets','downloads','favicon.svg'];
 const directoryFiles={
  assets:['with','without'].flatMap(arm=>Array.from({length:8},(_,i)=>`${arm}-${i+1}.jpg`)),
- downloads:['with-skill.pptx','without-skill.pptx','delivery-workbench-codex-v1.1.0.zip','delivery-workbench-codex-v1.1.0.zip.sha256','comparison.md','protocol.md','blind-review.md']
+ downloads:['with-skill.pptx','without-skill.pptx','delivery-workbench-codex-v1.1.0.zip','delivery-workbench-codex-v1.1.0.zip.sha256','deliver-workbench-v1.3.0.zip','deliver-workbench-v1.3.0.zip.sha256','comparison.md','protocol.md','blind-review.md']
 };
 export async function build(output=new URL('../site-dist/',import.meta.url)){
  await mkdir(output,{recursive:true});

@@ -67,7 +67,7 @@ $('answers-form').onsubmit=async event=>{
  }catch(error){showError('answer-error',error.message);}finally{$('answer-submit').disabled=false;}
 };
 function apply(state){
- $('connection').textContent='任务已连接';const signature=JSON.stringify([state.status,state.questions,state.clarifications,state.artifacts,state.message]);
+ $('connection').textContent='任务已连接';$('connection').classList.add('connected');const signature=JSON.stringify([state.status,state.questions,state.clarifications,state.artifacts,state.message]);
  if(signature===lastState)return;lastState=signature;
  const confirmed=state.clarifications||[];
  $('confirmed-brief').hidden=!confirmed.length;
@@ -98,7 +98,7 @@ function apply(state){
 async function refresh(){
  if(!active||refreshing)return;refreshing=true;
  try{apply(await (await request()).json());}
- catch(error){$('connection').textContent='连接暂时不可用';showError('form-error',error.message);}
+ catch(error){$('connection').textContent='连接暂时不可用';$('connection').classList.remove('connected');showError('form-error',error.message);}
  finally{refreshing=false;if(active)poll=setTimeout(refresh,2500);}
 }
 window.addEventListener('pagehide',()=>{active=false;clearTimeout(poll);});
