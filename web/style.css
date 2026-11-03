@@ -20,3 +20,5 @@ main{max-width:1200px;margin:auto;padding:48px 40px 24px}.intro h1{font-size:cla
 @media(max-width:600px){.preferences{margin:0 20px 20px}.preference-fields{grid-template-columns:1fr;gap:16px}.result-meta{margin:-4px 20px 20px}.size-warning{margin:0 20px 20px}.export-actions{padding:0 20px 20px}.export-actions>span{width:100%}.intro .english-intro{font-size:12px}.preferences summary span{display:block;margin-left:0;margin-top:6px}}
 @media(prefers-reduced-motion:reduce){.primary,.secondary,.quiet,.categories button{transition:none}}
 @media(max-width:360px){.topbar{padding:12px;gap:6px}.brand{font-size:15px;gap:7px}.brand-mark{width:30px;height:36px}.top-actions .quiet{padding:8px 6px}.top-actions .secondary{padding:8px 10px}.intro h1{font-size:28px}.steps{gap:8px}.steps li{gap:4px}.steps li span{max-width:5em}}
+
+.attachment-zone{padding:18px;border:1px dashed #a5b8a9;border-radius:10px;background:#fafcf9}.attachment-zone.is-dragging{background:#e9f2eb;border:1px solid var(--brand);box-shadow:0 0 0 3px #dceadf}.attachment-zone.is-dragging .attachment-help{color:var(--brand)}

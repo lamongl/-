@@ -53,7 +53,7 @@ All three conditions met the explicit requirements in 6/6 text outputs; no quali
 ## 功能
 
 - 四类任务入口，逐个询问缺少的关键信息。
-- 本地读取 UTF-8 TXT、MD、CSV：最多 3 份，每份 200 KB。
+- 拖入附件区或点击选择，本地读取 UTF-8 TXT、MD、CSV：最多 3 份，每份 200 KB；读取后原文纳入提示词。
 - 将资料原文、任务和修改要求合并成一份可复制的提示词草稿。
 - 返回修改保留已有回答；新建任务前保护未保存内容。
 
@@ -101,3 +101,4 @@ npm run build
 - `docs/`：产品方案与评估记录（开发工作区中保留）。
 
 MIT License。欢迎通过 Issue 提交可复现问题；请使用虚构数据，不要公开真实业务资料、账号或密钥。
+

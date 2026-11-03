@@ -1,4 +1,5 @@
-import {categories,nextQuestion,composePreview,validateFile,parseSourceLinks,draftStats,scenarioExample} from './core.mjs';
+import {categories,nextQuestion,composePreview,parseSourceLinks,draftStats,scenarioExample} from './core.mjs';
+import {readAttachments,bindFileDrop} from './attachments.mjs';
 import {createDictation,appendDictation} from './speech.mjs';
 const $=id=>document.getElementById(id);
 let category='report',answers={},files=[],links=[],question=null,revision='',reading=false;
@@ -121,26 +122,24 @@ $('cancel-replace').onclick=()=>{pendingReplacement=null;$('replace-dialog').clo
 $('confirm-replace').onclick=()=>{const action=pendingReplacement;pendingReplacement=null;$('replace-dialog').close();action?.();};
 $('replace-dialog').addEventListener('cancel',()=>{pendingReplacement=null;});
 $('attach').onclick=()=>$('file-input').click();
-$('file-input').onchange=async event=>{
+async function addFiles(incoming){
+  if(reading||dictating||$('input-panel').hidden||!incoming.length)return;
   reading=true;const controls=[$('start'),$('new-task'),$('attach'),$('voice'),$('use-scenario'),...document.querySelectorAll('[data-example]')];
   controls.forEach(b=>b.disabled=true);$('attach-label').textContent='正在读取资料…';$('attach').setAttribute('aria-busy','true');
-  const errors=[];
   try{
-    for(const file of event.target.files){
-      const issue=validateFile(file);if(issue){errors.push(file.name+'：'+issue);continue;}
-      if(files.length>=3){errors.push('此预览最多添加 3 份资料。');break;}
-      try{
-        const text=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());
-        if(text.includes('\0'))throw Error('binary');
-        if(!text.trim()){errors.push(file.name+'：文件为空。');continue;}
-        files.push({name:file.name,text});dirty=true;
-      }catch{errors.push(file.name+'：请使用 UTF-8 编码的文本文件。');}
-    }
+    const {accepted,errors}=await readAttachments(incoming,files.length);
+    files.push(...accepted);if(accepted.length)dirty=true;
+    announce('file-error',errors.join(' '));
   }finally{
     reading=false;controls.forEach(b=>b.disabled=false);$('attach-label').textContent='添加参考资料';$('attach').removeAttribute('aria-busy');
-    event.target.value='';renderFiles();announce('file-error',errors.join(' '));
+    $('file-input').value='';renderFiles();
   }
-};
+}
+$('file-input').onchange=event=>addFiles(Array.from(event.target.files));
+bindFileDrop({
+  root:document,zone:$('attachment-zone'),onFiles:addFiles,
+  canAccept:()=>!reading&&!dictating&&!$('input-panel').hidden
+});
 $('copy').onclick=async()=>{
   try{await navigator.clipboard.writeText($('result').value);$('copy-label').textContent='已复制完整提示词';announce('copy-status','复制成功。可以粘贴到目标 AI 中使用；当前草稿未经 AI 评审。');}
   catch{$('result').focus();$('result').select();announce('copy-status','自动复制不可用，已选中文本，请手动复制。');}
