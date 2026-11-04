@@ -1,16 +1,17 @@
 # 交给你的 Agent 安装
 
-用户只需把整个 ZIP 交给能够读写文件、执行命令的 Agent，并说：
+将本页链接发给能够读写文件和执行命令的 Agent。也可以分别发送本页和以下文件。
 
-> 请读取压缩包里的 INSTALL.md，帮我在你当前使用的工具中安装成品工作台。
-
-以下说明供执行安装的 Agent 阅读。同一安装包适用于不同宿主，不要求用户自行选择平台包。配置必须按当前宿主的真实安装入口完成。
+- [SKILL.md](https://lamongl.github.io/-/deliver-workbench/SKILL.md)
+- [CONNECTOR.md](https://lamongl.github.io/-/deliver-workbench/CONNECTOR.md)
+- [references/setup.md](https://lamongl.github.io/-/deliver-workbench/references/setup.md)
+- [references/quality.md](https://lamongl.github.io/-/deliver-workbench/references/quality.md)
 
 ## 自动完成安装
 
 1. 识别你正在运行的 Agent 工具、操作系统、用户 Skill 目录和 MCP 配置方式。优先使用宿主现有的安装/连接器工具或官方说明。不要把当前工具默认当成 Codex，也不要猜测其他工具的配置文件位置。
-2. 解压整个 `deliver-workbench` 目录到持久位置。需要目录式 Skill 的宿主，可将整个目录放入实际 Skill 目录。保留原有用户任务、同名旧版本和其他连接器配置；更新时先备份需要替换的配置。
-3. 检查可用 Node.js，要求22.13或更新版本。可使用宿主已有的Node运行环境；在解压目录运行 `npm ci`。缺少运行环境时，使用当前工具允许的安装方式补齐；需要系统授权时正常申请，不假装已安装。
+2. 在持久位置创建 `deliver-workbench` 目录并保存以上 Skill 与参考文件，保留相对路径。完整下载 CONNECTOR.md，解析其中的 JSON 代码块，将各键对应的字符串原样保存为 UTF-8 文件。路径必须在工作台目录内，拒绝绝对路径和含有 `..` 的路径。需要目录式 Skill 的宿主，可将整个目录放入实际 Skill 目录。保留原有用户任务、同名旧版本和其他连接器配置；更新时先备份需要替换的配置。
+3. 检查可用 Node.js，要求22.13或更新版本。可使用宿主已有的Node运行环境；在工作台目录运行 `npm ci`。缺少运行环境时，使用当前工具允许的安装方式补齐；需要系统授权时正常申请，不假装已安装。
 4. 将目录中的 `SKILL.md` 注册为 `deliver-workbench`。使用宿主的实际Skill导入方式，不要求用户手动改提示词。
 5. 在当前宿主注册名为 `delivery_workbench` 的 stdio MCP 服务：命令为实际Node可执行文件绝对路径，参数为实际 `bridge/server.mjs` 绝对路径。它使用本机服务，不需要用户提供模型API Key或腾讯OAuth。
 6. 运行 `node scripts/verify-install.mjs`，验证连接器可以启动、列出7个工具、创建任务并访问本地界面。这个检查只验证连接器，不代表当前宿主已加载工具。
@@ -24,7 +25,7 @@
 Codex可将整个目录放入用户Skill目录 `~/.codex/skills/deliver-workbench`，安装依赖后使用真实绝对路径：
 
 ```text
-codex mcp add delivery_workbench -- <Node绝对路径> <解压目录/bridge/server.mjs绝对路径>
+codex mcp add delivery_workbench -- <Node绝对路径> <工作台目录/bridge/server.mjs绝对路径>
 ```
 
 腾讯 WorkBuddy、豆包和 DeepSeek 的 Agent 工具使用各自的 Skill/连接器安装入口；用户已确认开发者实测跑通，配置位置与能力随具体产品版本而异。读取当前工具提供的说明完成配置，不套用Codex的目录或命令。

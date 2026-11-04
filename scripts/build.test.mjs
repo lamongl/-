@@ -20,9 +20,17 @@ test('新版发布仅含白名单，真实成果与资源支持仓库子路径',
   assert.ok(html.includes('5 分 34 秒')&&html.includes('9 分 31 秒'));
   assert.ok(!html.includes('Token 消耗</th>'));
   assert.ok(!html.includes('20%')&&!html.includes('10%'));
-  for(const name of ['with-skill.pptx','without-skill.pptx','deliver-workbench-v1.3.0.zip']){
+  for(const name of ['with-skill.pptx','without-skill.pptx']){
    const bytes=await readFile(new URL('downloads/'+name,output));assert.equal(bytes.subarray(0,2).toString(),'PK');assert.ok(bytes.length>10000);
   }
+  assert.ok(!html.includes('.zip'));
+  const connector=await readFile(new URL('deliver-workbench/CONNECTOR.md',output),'utf8');
+  const payload=connector.match(/^(`{3,})json\r?\n([\s\S]*?)\r?\n\1$/m);
+  assert.ok(payload);
+  const files=JSON.parse(payload[2]);
+  assert.equal(files['bridge/server.mjs'],await readFile(new URL('../bridge/server.mjs',import.meta.url),'utf8'));
+  assert.deepEqual(JSON.parse(files['package.json']).dependencies,JSON.parse(files['package-lock.json']).packages[''].dependencies);
+  assert.ok(!(await readdir(new URL('downloads/',output))).some(name=>name.includes('.zip')));
   assert.ok(!publicFiles.includes('.workbench')&&!publicFiles.includes('experiments'));
   await writeFile(new URL('private.txt',output),'must not publish');
   await assert.rejects(build(output),/非白名单/);

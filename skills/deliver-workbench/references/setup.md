@@ -12,7 +12,7 @@ Codex使用当前官方支持的stdio MCP配置。命令中的Node和服务脚�
 codex mcp add delivery_workbench -- <Node可执行文件的绝对路径> <项目根目录/bridge/server.mjs的绝对路径>
 ```
 
-从源码安装时，将 `skills/deliver-workbench` 整个目录放入宿主支持的技能目录；使用发行ZIP时，将解压后包含 `SKILL.md` 的 `deliver-workbench` 目录放入技能目录，并在该目录运行 `npm ci`。源码的MCP脚本位于项目根目录，发行ZIP的脚本位于解压目录，两者都应使用实际 `bridge/server.mjs` 绝对路径配置。Codex可使用用户技能目录；刷新MCP连接或按宿主要求重启/新开会话，确认出现 `delivery_workbench` 的7个工具后再调用Skill。
+从官网安装时，按 INSTALL.md 还原工作台目录，在该目录运行 `npm ci`，并使用目录内的 `bridge/server.mjs` 配置 MCP。源码安装的脚本位于仓库根目录。
 
 其他支持stdio MCP及本地文件制作工具的宿主可以采用等价配置，但安装入口和文件工具不同，需要单独验证。仅支持普通网页聊天的AI不能靠这份SKILL.md自动打开并接管本机服务。
 
