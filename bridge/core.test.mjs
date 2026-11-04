@@ -19,6 +19,11 @@ function uploadRequest(request='分析变化',files=[new File(['月份,收入\n1
 async function upload(job,body=uploadRequest(),options={}){
  return fetch(job.api_url+'/submit',{method:'POST',headers:{'X-Workbench-Token':job.token,...options.headers},body});
 }
+async function confirm(bridge,job){
+ await bridge.askQuestions(job.job_id,[{id:'purpose',title:'这份报告主要用于什么场景？',options:['内部复盘','对外汇报']}]);
+ const response=await fetch(job.api_url+'/answers',{method:'POST',headers:{'X-Workbench-Token':job.token,'Content-Type':'application/json'},body:JSON.stringify({answers:{purpose:'内部复盘'}})});
+ assert.equal(response.status,200);
+}
 test('上传原件和文字进入独立任务，等待接口在提交后返回',async t=>{
  const {bridge,job}=await setup(t);
  const waiting=bridge.waitForSubmission(job.job_id,2000);
@@ -46,6 +51,7 @@ test('坏文件和空需求不能造成已提交或部分成功',async t=>{
 });
 test('只有任务output中的真实产物可以交付并下载',async t=>{
  const {bridge,job,root}=await setup(t);await upload(job);
+ await confirm(bridge,job);
  const info=await bridge.getJob(job.job_id);
  const artifact=join(info.output_dir,'报告.txt');await writeFile(artifact,'成品：增长20%。');
  const outside=join(root,'outside.txt');await writeFile(outside,'private');
@@ -70,6 +76,7 @@ test('AI追问在界面回答后返回宿主，保留原始需求',async t=>{
 
 test('替换成其他任务目录的output联接不能发布或下载跨任务文件',async t=>{
  const {bridge,job,root}=await setup(t);await upload(job);
+ await confirm(bridge,job);
  const original=await bridge.getJob(job.job_id),other=await bridge.createJob({});
  const otherInfo=await bridge.getJob(other.job_id);const privatePath=join(otherInfo.output_dir,'private.txt');await writeFile(privatePath,'other task');
  assert.ok(resolve(original.output_dir).startsWith(resolve(root)));

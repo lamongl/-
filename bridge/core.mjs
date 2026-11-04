@@ -60,6 +60,7 @@ export async function createBridge({dataDir,port=0}){
  }
  async function setProgress(id,status,message=''){
   const job=await load(id);if(!['processing','failed'].includes(status)||!['submitted','processing'].includes(job.status))throw fail('任务状态不允许此操作。',409);
+  if(status==='processing'&&!job.clarifications?.length)throw fail('请先调用ask_questions，在工作台展示追问并等待用户提交回答，再开始制作。',409);
   job.status=status;job.message=String(message).slice(0,1000);await persist(job);return summary(job);
  }
  async function outputRoot(job){
@@ -74,6 +75,7 @@ export async function createBridge({dataDir,port=0}){
  }
  async function publishResult(id,paths,message=''){
   const job=await load(id);if(!['submitted','processing'].includes(job.status))throw fail('任务尚未准备好交付。',409);
+  if(!job.clarifications?.length)throw fail('请先在工作台完成追问并收到用户回答，再交付成品。',409);
   if(!Array.isArray(paths)||!paths.length||paths.length>10)throw fail('需要1至10个真实成品文件。');
   const output=await outputRoot(job),artifacts=[];
   for(const path of paths){

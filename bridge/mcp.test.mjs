@@ -22,11 +22,25 @@ test('真实stdio MCP完成建任务、取材料、追问、制作状态和成�
  assert.equal((await fetch(job.api_url+'/submit',{method:'POST',headers:{'X-Workbench-Token':job.token},body})).status,200);
  assert.equal((await call('wait_for_submission',{job_id:job.job_id})).status,'submitted');
  assert.equal((await call('read_material',{job_id:job.job_id,file_index:0})).text,'8月100元，9月120元');
+ const path=join(job.output_dir,'月报.md');
+ await writeFile(path,'9月比8月增加20元，环比20%。');
+ for(const [name,arguments_] of [
+  ['set_progress',{status:'processing'}],
+  ['publish_result',{paths:[path]}]
+ ]){
+  const result=await client.callTool({name,arguments:{job_id:job.job_id,...arguments_}});
+  assert.equal(result.isError,true);
+  assert.match(result.content[0].text,/工作台.*追问/);
+ }
  await call('ask_questions',{job_id:job.job_id,questions:[{id:'reader',title:'给谁看？',options:['主管','客户']}]});
- await fetch(job.api_url+'/answers',{method:'POST',headers:{'X-Workbench-Token':job.token,'Content-Type':'application/json'},body:JSON.stringify({answers:{reader:'主管'}})});
+ const headers={'X-Workbench-Token':job.token,'Content-Type':'application/json'};
+ const displayed=await (await fetch(job.api_url,{headers})).json();
+ assert.equal(displayed.status,'needs_clarification');
+ assert.equal(displayed.questions[0].title,'给谁看？');
+ const answer=await fetch(job.api_url+'/answers',{method:'POST',headers,body:JSON.stringify({answers:{reader:'主管'}})});
+ assert.equal(answer.status,200);
  const ready=await call('get_job',{job_id:job.job_id});assert.equal(ready.clarifications[0].answer,'主管');
  await call('set_progress',{job_id:job.job_id,status:'processing',message:'正在制作月报'});
- const path=join(ready.output_dir,'月报.md');await writeFile(path,'9月比8月增加20元，环比20%。');
  const done=await call('publish_result',{job_id:job.job_id,paths:[path],message:'月报已完成'});assert.equal(done.status,'completed');
  const response=await fetch(job.api_url+'/artifacts/0',{headers:{'X-Workbench-Token':job.token}});assert.equal(await response.text(),'9月比8月增加20元，环比20%。');
 });
