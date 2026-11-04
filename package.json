@@ -1,6 +1,6 @@
 {
   "name": "prompt-workbench",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "type": "module",
   "description": "成品工作台：Skill、本地MCP连接器与公开介绍下载站",
@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node web/server.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node --test web/core.test.mjs web/speech.test.mjs web/attachments.test.mjs web/document-parser.test.mjs scripts/build.test.mjs bridge/core.test.mjs bridge/mcp.test.mjs bridge/window.test.mjs",
+    "test": "node --test web/core.test.mjs web/speech.test.mjs web/attachments.test.mjs web/document-parser.test.mjs scripts/build.test.mjs bridge/core.test.mjs bridge/mcp.test.mjs bridge/window.test.mjs bridge/local.test.mjs scripts/install.test.mjs",
     "start:bridge": "node bridge/server.mjs"
   },
   "dependencies": {

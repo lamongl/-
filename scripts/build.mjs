@@ -8,7 +8,7 @@ const directoryFiles={
  downloads:['with-skill.pptx','without-skill.pptx','comparison.md','protocol.md','blind-review.md','token-usage.json']
 };
 const skillDocs=['SKILL.md','INSTALL.md','references/setup.md','references/quality.md'];
-const runtimeFiles=['LICENSE','bridge/core.mjs','bridge/server.mjs','bridge/window.mjs','bridge/ui/index.html','bridge/ui/ui.css','bridge/ui/ui.mjs','web/core.mjs','web/attachments.mjs','web/document-parser.mjs','scripts/verify-install.mjs'];
+const runtimeFiles=['LICENSE','bridge/core.mjs','bridge/server.mjs','bridge/actions.mjs','bridge/cli.mjs','bridge/local-service.mjs','bridge/window.mjs','bridge/ui/index.html','bridge/ui/ui.css','bridge/ui/ui.mjs','web/core.mjs','web/attachments.mjs','web/document-parser.mjs','scripts/verify-install.mjs','scripts/verify-tarball.mjs'];
 const repo=new URL('../',import.meta.url);
 
 async function publishSkill(target){

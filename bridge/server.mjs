@@ -4,11 +4,11 @@ import {CallToolRequestSchema,ListToolsRequestSchema} from '@modelcontextprotoco
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {createBridge} from './core.mjs';
-import {openWorkbenchWindow} from './window.mjs';
+import {callWorkbenchTool} from './actions.mjs';
 
 const dataDir=process.env.WORKBENCH_DATA_DIR||fileURLToPath(new URL('../.workbench/jobs/',import.meta.url));
 const bridge=await createBridge({dataDir});
-const server=new Server({name:'delivery-workbench',version:'1.3.0'},{capabilities:{tools:{}}});
+const server=new Server({name:'delivery-workbench',version:'1.4.0'},{capabilities:{tools:{}}});
 const string={type:'string'},id={job_id:string},readAnnotations={readOnlyHint:true,destructiveHint:false,openWorldHint:false};
 const tools=[
  {name:'create_job',description:'立即创建任务并自动请求打开独立工作台窗口，让用户提交材料和需求。返回window.status为requested时不要重复打开；unavailable或disabled时由宿主打开ui_url。之后wait_for_submission，不先在聊天访谈。',inputSchema:{type:'object',properties:{title:string,request:string,outputKind:{type:'string',enum:['auto','pptx','docx','xlsx','pdf','text','code']}},additionalProperties:false}},
@@ -22,20 +22,7 @@ const tools=[
 server.setRequestHandler(ListToolsRequestSchema,async()=>({tools}));
 server.setRequestHandler(CallToolRequestSchema,async({params})=>{
  try{
-  const a=params.arguments||{};let result;
-  switch(params.name){
-   case 'create_job':
-    result=await bridge.createJob(a);
-    result.window=process.env.WORKBENCH_OPEN_WINDOW==='0'?{status:'disabled'}:await openWorkbenchWindow(result.ui_url);
-    break;
-   case 'wait_for_submission':result=await bridge.waitForSubmission(a.job_id,a.timeout_ms);break;
-   case 'get_job':result=await bridge.getJob(a.job_id);break;
-   case 'read_material':result=await bridge.readMaterial(a.job_id,a.file_index,a.offset,a.length);break;
-   case 'ask_questions':result=await bridge.askQuestions(a.job_id,a.questions);break;
-   case 'set_progress':result=await bridge.setProgress(a.job_id,a.status,a.message);break;
-   case 'publish_result':result=await bridge.publishResult(a.job_id,a.paths,a.message);break;
-   default:throw Error('未知工具。');
-  }
+  const result=await callWorkbenchTool(bridge,params.name,params.arguments||{});
   return {content:[{type:'text',text:JSON.stringify(result)}]};
  }catch(error){return {isError:true,content:[{type:'text',text:error.message}]};}
 });

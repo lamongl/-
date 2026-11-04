@@ -6,7 +6,7 @@ import {join,resolve,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const dataDir=await mkdtemp(join(tmpdir(),'delivery-install-check-'));
-const client=new Client({name:'delivery-install-check',version:'1.2.0'});
+const client=new Client({name:'delivery-install-check',version:'1.4.0'});
 const transport=new StdioClientTransport({command:process.execPath,args:[fileURLToPath(new URL('../bridge/server.mjs',import.meta.url))],env:{...process.env,WORKBENCH_DATA_DIR:dataDir,WORKBENCH_OPEN_WINDOW:'0'}});
 try{
  await client.connect(transport);
@@ -18,7 +18,7 @@ try{
  const data=JSON.parse(result.content.find(item=>item.type==='text').text);
  const response=await fetch(data.api_url,{headers:{'X-Workbench-Token':data.token}});
  if(!response.ok||(await response.json()).status!=='awaiting_input')throw Error('本地任务界面不可访问');
- console.log(JSON.stringify({ok:true,tools:expected.length,localInterface:true,note:'连接器自检通过；还需确认当前宿主已加载Skill和MCP工具。'}));
+ console.log(JSON.stringify({ok:true,tools:expected.length,localInterface:true,node:process.execPath,hostToolsVerified:false,note:'仅服务端自检通过。还需在宿主实际调用MCP工具，才算MCP接入成功。'}));
 }finally{
  await client.close();
  const target=resolve(dataDir),base=resolve(tmpdir())+sep;
