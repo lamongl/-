@@ -14,3 +14,36 @@
 .scroll-ready .story-text,.scroll-ready .story-text.active{transform:none;transition:opacity .3s ease,visibility 0s .3s}.scroll-ready .story-text.active{transition-delay:0s}
 
 .scene>img{width:100%;height:auto}.actual-workbench{padding:100px max(7vw,24px);background:#101014}.actual-workbench .section-intro>p{color:#a1a1a6}.workbench-tabs{width:max-content;max-width:100%;margin:0 auto 25px;background:#26262c}.workbench-tabs button{color:#c7c7ce}.workbench-tabs [aria-pressed=true]{background:#006edb;color:#fff}.workbench-shot{max-width:1200px;margin:auto;background:#0a0a0b;border-radius:20px;overflow:hidden}.workbench-shot img{width:100%;height:auto}.workbench-shot figcaption{display:flex;justify-content:space-between;gap:10px;padding:17px 24px;background:#202025;color:#d2d2d7;font-size:14px;line-height:1.7}@media(max-width:650px){.actual-workbench{padding:65px 22px}.workbench-tabs{width:100%;border-radius:18px;display:grid;grid-template-columns:1fr 1fr}.workbench-tabs button{font-size:13px}.workbench-shot{border-radius:12px}.workbench-shot figcaption{padding:12px 14px;font-size:11px;flex-direction:column}}
+
+.hero-actions {
+  gap: 22px;
+}
+.hero-actions .button {
+  min-height: 44px;
+  padding: 10px 19px;
+  border-radius: 9px;
+  background: #f5f5f7;
+  color: #151518;
+  font-size: 15px;
+  font-weight: 600;
+}
+.hero-actions .button:hover {
+  background: #dddde3;
+  transform: none;
+}
+.hero-actions .text-link {
+  min-height: 44px;
+  color: #c8c8ce;
+  font-size: 15px;
+}
+.hero-actions .text-link:hover {
+  color: #f5f5f7;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 650px) {
+  .hero-actions {
+    flex-direction: row;
+    gap: 18px;
+  }
+}
