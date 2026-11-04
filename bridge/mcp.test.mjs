@@ -17,10 +17,16 @@ test('真实stdio MCP完成建任务、取材料、追问、制作状态和成�
  const tools=await client.listTools();assert.equal(tools.tools.length,7);
  const job=await call('create_job',{title:'演示任务',outputKind:'text'});
  assert.equal(job.window.status,'disabled');
- assert.equal((await call('wait_for_submission',{job_id:job.job_id,timeout_ms:1})).status,'awaiting_input');
+ const waiting=await call('wait_for_submission',{job_id:job.job_id,timeout_ms:1});
+ assert.equal(waiting.status,'awaiting_input');
+ assert.equal(waiting.waiting_for_user,true);
+ assert.equal(waiting.next_action,'wait_for_submission');
  const body=new FormData();body.set('request','分析销售变化');body.set('outputKind','text');body.append('files',new File(['8月100元，9月120元'],'资料.txt'));
  assert.equal((await fetch(job.api_url+'/submit',{method:'POST',headers:{'X-Workbench-Token':job.token},body})).status,200);
- assert.equal((await call('wait_for_submission',{job_id:job.job_id})).status,'submitted');
+ const submitted=await call('wait_for_submission',{job_id:job.job_id});
+ assert.equal(submitted.status,'submitted');
+ assert.equal(submitted.waiting_for_user,false);
+ assert.equal(submitted.next_action,'get_job');
  assert.equal((await call('read_material',{job_id:job.job_id,file_index:0})).text,'8月100元，9月120元');
  const path=join(job.output_dir,'月报.md');
  await writeFile(path,'9月比8月增加20元，环比20%。');
@@ -37,6 +43,7 @@ test('真实stdio MCP完成建任务、取材料、追问、制作状态和成�
  const displayed=await (await fetch(job.api_url,{headers})).json();
  assert.equal(displayed.status,'needs_clarification');
  assert.equal(displayed.questions[0].title,'给谁看？');
+ assert.equal((await call('wait_for_submission',{job_id:job.job_id,timeout_ms:1})).next_action,'wait_for_submission');
  const answer=await fetch(job.api_url+'/answers',{method:'POST',headers,body:JSON.stringify({answers:{reader:'主管'}})});
  assert.equal(answer.status,200);
  const ready=await call('get_job',{job_id:job.job_id});assert.equal(ready.clarifications[0].answer,'主管');

@@ -56,6 +56,10 @@ console.log(target);
 
 ## 安装依赖
 
+Windows PowerShell 5.1 不一定有 `pwsh`，宿主 Node/npm 也可能不在 PATH。先定位真实可执行文件，用 `& '实际绝对路径/node.exe' --version` 检查。优先用同一 Node 执行随它附带的 `node_modules/npm/bin/npm-cli.js ci`，或显式运行 `npm.cmd`，避免被 npm.ps1 的执行策略拦截。需要 PATH 时只对本次进程临时追加，不修改系统 PATH 或全局执行策略。
+
+若连版本检查都报 sandbox-local / windows-acl / temp grant 错误，应先按宿主官方诊断处理沙箱授权；这不是缺少工作台依赖。不能通过反复重装、擅自切换完全权限或批量修改 ACL 解决。报告具体错误与用户可选的宿主授权操作。
+
 在还原后的工作台目录执行 `npm ci`。使用宿主可用的 npm 命令，必要时用实际 Node 路径执行 npm-cli.js。核对命令退出码。
 
 出现 ECONNRESET 等网络错误时可以重试一次。需要镜像时，针对本次命令使用 `npm ci --registry=https://registry.npmmirror.com`，不修改全局配置。镜像属于第三方服务。
@@ -88,6 +92,8 @@ codex mcp add delivery_workbench -- <Node绝对路径> <工作台目录/bridge/s
 ```
 
 七个工具为 `create_job`、`get_job`、`wait_for_submission`、`read_material`、`ask_questions`、`set_progress`、`publish_result`。
+
+DeepSeek Harness 的 profile patch 接入与 Windows 示例见 [setup.md](references/setup.md#deepseek-harness)。普通 DeepSeek 聊天网页不等于 Harness，不套用这一配置。
 
 记录里的豆包连接器使用远程 MCP，这不证明本机 stdio 注册可用。遇到只允许远程服务地址的配置页时，需要核对该产品的本地服务支持范围。本地工作台网页地址也不是 MCP 服务地址。
 

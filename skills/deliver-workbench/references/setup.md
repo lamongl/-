@@ -1,4 +1,4 @@
-# 宿主接入与豆包适配
+# 宿主接入与平台适配
 
 ## MCP 是首选接入方式
 
@@ -7,6 +7,42 @@
 调用后，MCP 的 `create_job` 会请求打开独立窗口。用户在界面提交资料并回答问题，Agent 通过七个工具读取状态、材料并交付。整个任务由一个服务进程管理。
 
 使用宿主自带 Node 时记录 `process.execPath`。例如豆包内置 Node 的实际路径由本机环境决定，升级后可能变化。重新解析路径、更新 MCP 命令并自检。
+
+## DeepSeek Harness
+
+用户提供的 Windows 11 / DSH Web 0.2.1-rc.2 安装报告记录了七个工具实调、界面追问及 PDF 交付；这是该环境的记录，不代表普通 DeepSeek 网页支持本地 MCP。当前配置以宿主实际版本和官方说明为准。
+
+先确定实际 DSH_HOME、当前 profile、Node 和安装目录。有插件管理入口时使用其官方安装流程；未暴露管理工具时，可以按官方 Loader 语法合并到 `$DSH_HOME/profiles/<当前profile>/cordis.patch.yml`。先备份，只增加本服务一项；同一 id/serverName 已存在时更新该项，不重复追加，不覆盖其他插件，也不默认写影响所有 profile 的全局 patch。
+
+下面路径为示例，必须替换为本机真实绝对路径。YAML 单引号保留 Windows 反斜杠。
+
+```yaml
+- insert:
+    - id: delivery-workbench-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: delivery_workbench
+        transport: stdio
+        command: 'D:\dsh\nodejs\node.exe'
+        args:
+          - 'D:\dsh\home\skills\deliver-workbench\bridge\server.mjs'
+        cwd: 'D:\dsh\home\skills\deliver-workbench'
+        toolCallTimeoutMs: 60000
+```
+
+保存后检查宿主是否热重载，确认 `mcp__delivery_workbench__*` 七个工具，再实际调用 create_job/get_job 验收；不能把“工具名出现”当成功。未刷新时按该版本的连接刷新流程处理，不盲目重启整个宿主。回滚时恢复该文件备份或仅移除本项；卸载前保留用户任务数据。
+
+官方参考：[MCP 客户端字段](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/mcp/mcp-client/README.md)、[profile patch 合并方式](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/mcp-memory.md)。
+
+### 减少反复输入“继续”
+
+25秒是一次等待的上限，可以接续调用。当前轮仍运行且宿主允许时，每个上传/答题节点按实际时钟最多等待约3分钟；收到提交立即继续，超时不重复创建任务。等待结果新增 waiting_for_user、next_action 和 continuation_hint，MCP 与 CLI 一致。只有总等待预算用尽、用户取消或宿主限制时才结束回合。工具返回不能保证唤醒已结束的模型会话；未验证宿主事件接口时，恢复仍需要回原聊天发送一次“继续工作台任务”。
+
+### 文件制作与转换
+
+连接器依赖负责读取资料，成品生成使用宿主已有工具。确需额外库时用独立临时制作目录安装，不改连接器的 package.json / 锁文件。先检查宿主内置文档或转换能力。
+
+若 LibreOffice Kit 返回 EEXIST，优先转换到当前任务 output 下新的版本文件名；保留上一版，核对新文件再发布。不默认删除已有成品，也不向用户交付仅改后缀的文件。
 
 ## 用户选择后的 CLI 备用方式
 
