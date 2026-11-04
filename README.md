@@ -2,7 +2,7 @@
 
 **把材料交给当前 AI，通过必要追问直接拿到成品。**
 
-[打开产品首页](https://lamongl.github.io/-/) · [直接下载 Skill v1.4.1](https://lamongl.github.io/-/deliver-workbench/SKILL.md) · [安装说明](skills/deliver-workbench/INSTALL.md) · [真实工作台界面](https://lamongl.github.io/-/#workbench) · [真实成果与对照记录](https://lamongl.github.io/-/#results) · [English](README.en.md)
+[打开产品首页](https://lamongl.github.io/-/) · [直接下载 Skill v1.5.0](https://lamongl.github.io/-/deliver-workbench/BUNDLE.md) · [安装说明](skills/deliver-workbench/INSTALL.md) · [真实工作台界面](https://lamongl.github.io/-/#workbench) · [真实成果与对照记录](https://lamongl.github.io/-/#results) · [English](README.en.md)
 
 成品工作台是一个开源 Skill 与本地 MCP 连接器。用户在界面提交材料和需求，当前宿主 AI 读取材料、分轮澄清、组织内容，使用已有工具制作并检查实际文件，最终在工作台下载。无需手动复制中间提示词。
 
@@ -46,3 +46,6 @@ npm start
 `npm run build` 生成 `site-dist/`，GitHub Actions 将其发布到原 Pages 根网址。`npm run start:bridge` 启动 stdio MCP（由宿主调用，不是独立AI服务）。`python scripts/package-delivery-skill.py` 生成白名单安装包。
 
 源代码包含早期版本以保留历史，新首页已替换原来的提示词复制页面。许可证：MIT。
+
+
+1.5.0 提供单文件 成品工作台.md，内含给 AI 的安装指导、工作台、tasteskill v2 完整资源。用户只需下载这一份交给具备本地工具能力的 Agent。项目先确认有无参考模板，无则跳过；分轮选项与自由输入引导，追问页支持补交参考文件。

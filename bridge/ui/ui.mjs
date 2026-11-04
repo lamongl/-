@@ -55,16 +55,19 @@ function renderQuestions(questions){
   const group=document.createElement('div');group.className='question-field';const label=document.createElement('label');label.htmlFor='question-'+q.id;label.textContent=q.title;
   const input=document.createElement('textarea');input.id='question-'+q.id;input.maxLength=2000;input.required=true;input.placeholder='选择一个方向，或写下你的想法；也可让 AI 按合理默认处理。';
   const options=document.createElement('div');options.className='options';
+  input.oninput=()=>options.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.textContent===input.value)));
   for(const choice of q.options){const button=document.createElement('button');button.type='button';button.textContent=choice;button.setAttribute('aria-pressed','false');button.onclick=()=>{input.value=choice;options.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));};options.append(button);}
   group.append(label,options,input);$('questions').append(group);
  }
 }
 $('answers-form').onsubmit=async event=>{
- event.preventDefault();$('answer-submit').disabled=true;showError('answer-error','');
+ event.preventDefault();$('answer-submit').disabled=true;$('reference-files').disabled=true;showError('answer-error','');
  try{
   const answers=Object.fromEntries(currentQuestions.map(q=>[q.id,$('question-'+q.id).value.trim()]));
-  const response=await request('/answers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers})});apply(await response.json());
- }catch(error){showError('answer-error',error.message);}finally{$('answer-submit').disabled=false;}
+  const body=new FormData();body.set('answers',JSON.stringify(answers));
+  for(const file of $('reference-files').files)body.append('files',file);
+  const response=await request('/answers',{method:'POST',body});$('reference-files').value='';apply(await response.json());
+ }catch(error){showError('answer-error',error.message);}finally{$('answer-submit').disabled=false;$('reference-files').disabled=false;}
 };
 function apply(state){
  $('connection').textContent='任务已连接';$('connection').classList.add('connected');const signature=JSON.stringify([state.status,state.questions,state.clarifications,state.artifacts,state.message]);

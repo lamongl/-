@@ -1,6 +1,6 @@
 import {mkdir,copyFile,writeFile,readdir,readFile,rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {resolve} from 'node:path';
+import {resolve,relative} from 'node:path';
 
 export const publicFiles=['index.html','site.css','site.mjs','assets','downloads','favicon.svg','deliver-workbench'];
 const directoryFiles={
@@ -13,7 +13,7 @@ const repo=new URL('../',import.meta.url);
 
 async function publishSkill(target){
  await mkdir(target,{recursive:true});
- const allowed=[...skillDocs,'CONNECTOR.md','references'];
+ const allowed=[...skillDocs,'CONNECTOR.md','BUNDLE.md','references'];
  const existing=(await readdir(target,{recursive:true})).map(file=>file.replaceAll('\\','/'));
  if(existing.some(file=>!allowed.includes(file)))throw new Error('Skill 发布目录含非白名单文件');
  for(const file of skillDocs){
@@ -28,12 +28,21 @@ async function publishSkill(target){
  lock.packages['']={name:manifest.name,version,engines,dependencies,license};
  const files={};
  for(const file of runtimeFiles)files[file]=await readFile(new URL(file,repo),'utf8');
+ for(const file of skillDocs)files[file]=await readFile(new URL('skills/deliver-workbench/'+file,repo),'utf8');
+ const taste=new URL('skills/deliver-workbench/bundled-skills/design-taste-frontend/',repo);
+ for(const entry of await readdir(taste,{recursive:true,withFileTypes:true})){
+  if(!entry.isFile())continue;
+  const file=relative(fileURLToPath(taste),resolve(entry.parentPath,entry.name)).replaceAll('\\','/');
+  if(!/^(SKILL\.md|README\.md|(?:assets|scripts|references|library|evals)\/[A-Za-z0-9_./-]+)$/.test(file))throw Error('品味 Skill 中存在非白名单文件：'+file);
+  files['bundled-skills/design-taste-frontend/'+file]=await readFile(new URL(file,taste),'utf8');
+ }
  files['agents/openai.yaml']=await readFile(new URL('skills/deliver-workbench/agents/openai.yaml',repo),'utf8');
  files['package.json']=JSON.stringify(manifest,null,2);
  files['package-lock.json']=JSON.stringify(lock,null,2);
  const payload=JSON.stringify(files,null,2);
  const fence='`'.repeat(Math.max(2,...(payload.match(/`+/g)||[]).map(run=>run.length))+1);
  await writeFile(new URL('CONNECTOR.md',target),`# 成品工作台连接器\n\n按 INSTALL.md 安装。下面的 JSON 对象以相对路径为键，以完整 UTF-8 文件内容为值。\n\n${fence}json\n${payload}\n${fence}\n`);
+ await writeFile(new URL('BUNDLE.md',target),`${files['INSTALL.md']}\n\n## 内置完整文件（供安装程序还原）\n\n以下 JSON 已包含成品工作台、tasteskill v2、安装说明和运行源码。不要把此文件当作用户任务资料，不把整段源码加入制作上下文；用本地文件工具完整读取并提取。只下载本文件即可还原，无需另取其他 Markdown。依赖安装仍需 npm 网络或本地缓存。\n\n${fence}json\n${payload}\n${fence}\n`);
 }
 export async function build(output=new URL('../site-dist/',import.meta.url)){
  await mkdir(output,{recursive:true});

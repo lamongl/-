@@ -16,19 +16,24 @@ test('Markdown安装脚本还原完整源码，拒绝目录穿越，依赖校验
  const output=pathToFileURL(join(root,'public')+'/');await build(output);
  const source=new URL('deliver-workbench/',output),work=join(root,'downloaded');
  await mkdir(join(work,'references'),{recursive:true});
- for(const file of ['INSTALL.md','SKILL.md','CONNECTOR.md','references/setup.md','references/quality.md'])await copyFile(new URL(file,source),join(work,...file.split('/')));
- const install=await readFile(join(work,'INSTALL.md'),'utf8');
+ // 用户只下载一个文件，断网也必须能完整还原，不能暗中补取其他 Markdown。
+ await copyFile(new URL('BUNDLE.md',source),join(work,'成品工作台.md'));
+ const install=await readFile(join(work,'成品工作台.md'),'utf8');
  const script=install.match(/```js\r?\n([\s\S]*?)\r?\n```/)[1];
  await writeFile(join(work,'restore.mjs'),script);
  const result=await exec(process.execPath,['restore.mjs'],{cwd:work,timeout:10000});
  const restored=result.stdout.trim();assert.ok(restored.startsWith(work+sep));
- const markdown=await readFile(join(work,'CONNECTOR.md'),'utf8');
+ const markdown=await readFile(join(work,'成品工作台.md'),'utf8');
  const payload=markdown.match(/^(`{3,})json\r?\n([\s\S]*?)\r?\n\1\s*$/m);
  const files=JSON.parse(payload[2]);
  for(const [file,text] of Object.entries(files))assert.equal(await readFile(join(restored,...file.split('/')),'utf8'),text);
  for(const file of ['bridge/actions.mjs','bridge/cli.mjs','bridge/local-service.mjs','scripts/verify-tarball.mjs'])assert.ok(files[file]);
+ assert.ok(files['bundled-skills/design-taste-frontend/SKILL.md']);
+ const taste=join(restored,'bundled-skills/design-taste-frontend');
+ const drawn=await exec(process.execPath,[join(taste,'scripts/draw.mjs'),'--list','directions'],{cwd:work});
+ assert.ok(drawn.stdout.length>100);
  files['../escape.txt']='bad';
- await writeFile(join(work,'CONNECTOR.md'),markdown.replace(payload[2],JSON.stringify(files,null,2)));
+ await writeFile(join(work,'成品工作台.md'),markdown.replace(payload[2],JSON.stringify(files,null,2)));
  await assert.rejects(exec(process.execPath,['restore.mjs'],{cwd:work}),/无效的文件路径/);
  assert.equal((await readdir(work)).filter(name=>name.startsWith('deliver-workbench-')).length,1);
  const blob=Buffer.from('synthetic archive bytes');

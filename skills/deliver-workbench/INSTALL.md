@@ -1,5 +1,11 @@
 # 成品工作台安装
 
+## 给 AI 的安装指引
+
+本文件是用户交给你的安装材料。用户要求安装时，先读取这部分指导，再通过文件工具处理底部的完整 JSON，勿把截断的聊天预览当源码。单个 `成品工作台.md`（下载地址为 BUNDLE.md）已经内置主 Skill、tasteskill v2、连接器及全部运行文件；不需要让用户再下载文件或拼接提示词。它需要有本地文件、命令及持续等待能力的 Agent；普通网页聊天无法仅凭上传本文件启动本地服务。
+
+在获准的安装目录保存用户提供的原始文件。用下面的脚本提取完整 JSON，还原到新目录，保留旧任务；安装依赖，优先接入 MCP，不可用时自动使用 CLI。将根目录作为成品工作台 Skill 注册或导入宿主，保留 bundled-skills 目录。主 Skill 会按任务读取其中的设计 Skill，无需用户手动调用第二个 Skill。按接入方式验收工具和持续等待，再报告实际结果。没有完成宿主验收时不要说“扔进来就已安装”。
+
 将本页交给有文件读写与命令执行能力的 Agent。优先把 MCP 安装并接入当前宿主。MCP 不可用时，自动沿用下面的 Markdown 还原、依赖安装和 CLI 备用接入，不要求用户另行选择一次。真实任务仍在工作台提交资料、追问和交付；宿主必须保持工具任务运行，在界面提交后直接接续，不需要额外输入“继续”。
 
 ## 先识别宿主
@@ -8,16 +14,16 @@
 
 可以使用宿主自带的 Node.js 22.13+。记录实际 `process.execPath`，不要复制其他电脑的路径。豆包沙箱运行时路径可能随版本变化，更新后重新解析 Node 路径并运行自检。
 
-## 还原 Markdown 中的完整文件
+## 从单文件还原完整文件
 
-发行文件均通过以下 Markdown 提供。`bridge/*.mjs` 等源码嵌在 CONNECTOR.md 的 JSON 中，官网没有对应的独立源码下载地址。
+正常安装只需本文件，不需要访问下面的分文件链接。以下链接仅兼容旧版安装和开发者排查。`bridge/*.mjs` 等源码嵌在 CONNECTOR.md 的 JSON 中，官网没有对应的独立源码下载地址。
 
 - [SKILL.md](https://lamongl.github.io/-/deliver-workbench/SKILL.md)
 - [CONNECTOR.md](https://lamongl.github.io/-/deliver-workbench/CONNECTOR.md)
 - [references/setup.md](https://lamongl.github.io/-/deliver-workbench/references/setup.md)
 - [references/quality.md](https://lamongl.github.io/-/deliver-workbench/references/quality.md)
 
-用文件下载工具获取完整 CONNECTOR.md。Node 网络下载失败时，用宿主文件下载工具或 PowerShell 将上面五个 Markdown 保存到当前目录及 references 子目录，再运行脚本。聊天中的截断预览不能用于安装。下面的 Node 脚本可保存为 `restore.mjs`，在获准写入的位置执行。它会创建一个新目录，更新旧安装时由 Agent 备份原文件后迁移，保留用户的 `.workbench` 数据。
+优先将用户提供的完整文件保存为当前目录的 成品工作台.md 或 BUNDLE.md，再运行脚本；文件已自带全部内容。只有旧版分文件安装才需下载完整 CONNECTOR.md 及四份说明。聊天中的截断预览不能用于安装。下面的 Node 脚本可保存为 `restore.mjs`，在获准写入的位置执行。它会创建一个新目录，更新旧安装时由 Agent 备份原文件后迁移，保留用户的 `.workbench` 数据。
 
 ```js
 import {mkdir,mkdtemp,writeFile,readFile} from 'node:fs/promises';
@@ -32,12 +38,17 @@ async function download(name){
   if(Buffer.byteLength(text)>4*1024*1024)throw Error('文件过大，请检查下载内容');
   return text;
 }
-const markdown=await download('CONNECTOR.md');
+let markdown;
+for(const name of ['成品工作台.md','BUNDLE.md','INSTALL.md']){
+  try{const text=await readFile(resolve(name),'utf8');if(/^(`{3,})json\r?\n/m.test(text)){markdown=text;break;}}
+  catch(error){if(error.code!=='ENOENT')throw error;}
+}
+markdown??=await download('CONNECTOR.md');
 const block=markdown.match(/^(`{3,})json\r?\n([\s\S]*?)\r?\n\1\s*$/m);
 if(!block)throw Error('未找到完整 JSON 代码块');
 const files=JSON.parse(block[2]);
 for(const name of ['SKILL.md','INSTALL.md','references/setup.md','references/quality.md']){
-  files[name]=await download(name);
+  files[name]??=await download(name);
 }
 for(const [name,text] of Object.entries(files)){
   if(!/^[A-Za-z0-9_./-]+$/.test(name)||name.startsWith('/')||name.split('/').includes('..')||typeof text!=='string'){

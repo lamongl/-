@@ -29,7 +29,7 @@ export async function createBridge({dataDir,port=0}){
   catch{throw fail('任务不存在。',404);}
  }
  const summary=job=>({job_id:job.id,title:job.title,status:job.status,request:job.request,output_kind:job.outputKind,files:job.files,questions:job.questions,clarifications:job.clarifications,artifacts:job.artifacts,output_dir:join(root,job.id,'output'),message:job.message||''});
- const publicSummary=job=>({job_id:job.id,title:job.title,status:job.status,request:job.request,output_kind:job.outputKind,files:job.files.map(({name,size,characters})=>({name,size,characters})),questions:job.questions,clarifications:job.clarifications,artifacts:job.artifacts.map(({name,size})=>({name,size})),message:job.message||''});
+ const publicSummary=job=>({job_id:job.id,title:job.title,status:job.status,request:job.request,output_kind:job.outputKind,files:job.files.map(({name,size,characters,role})=>({name,size,characters,role})),questions:job.questions,clarifications:job.clarifications,artifacts:job.artifacts.map(({name,size})=>({name,size})),message:job.message||''});
  async function createJob({title='新的任务',outputKind='auto',request=''}={}){
   if(!kinds.has(outputKind))throw fail('不支持的交付格式。');
   const id=randomUUID(),token=randomBytes(32).toString('hex');
@@ -128,10 +128,27 @@ export async function createBridge({dataDir,port=0}){
    }
    if(req.method==='POST'&&match[2]==='answers'){
     if(job.status!=='needs_clarification')throw fail('当前没有需要回答的问题。',409);
-    const {answers}=JSON.parse((await bodyBytes(req)).toString());
-    if(!answers||job.questions.some(q=>typeof answers[q.id]!=='string'||!answers[q.id].trim()||answers[q.id].length>2000))throw fail('请回答每个问题，每条最多2000字符。');
-    for(const q of job.questions)job.clarifications.push({id:q.id,title:q.title,answer:answers[q.id].trim()});
-    job.questions=[];job.status='submitted';await persist(job);json(200,publicSummary(job));return;
+    job.status='uploading';
+    try{
+     const bytes=await bodyBytes(req);let answers,files=[];
+     if((req.headers['content-type']||'').startsWith('multipart/form-data')){
+      const form=await new Response(bytes,{headers:{'Content-Type':req.headers['content-type']}}).formData();
+      answers=JSON.parse(String(form.get('answers')||'null'));files=form.getAll('files');
+     }else ({answers}=JSON.parse(bytes.toString()));
+     if(!answers||job.questions.some(q=>typeof answers[q.id]!=='string'||!answers[q.id].trim()||answers[q.id].length>2000))throw fail('请回答每个问题，每条最多2000字符。');
+     if(job.files.length+files.length>5)throw fail('任务材料与参考文件合计最多5份。');
+     for(const file of files){if(typeof file.arrayBuffer!=='function')throw fail('附件无效。');const issue=validateFile(file);if(issue)throw fail(file.name+'：'+issue);}
+     const parsed=await readAttachments(files,job.files.length);if(parsed.errors.length)throw fail(parsed.errors.join(' '));
+     const records=[];
+     for(let i=0;i<files.length;i++){
+      const key='reference-'+randomUUID(),original_path=join(root,job.id,'originals',key+extname(files[i].name).toLowerCase()),text_path=join(root,job.id,'texts',key+'.txt');
+      await writeFile(original_path,Buffer.from(await files[i].arrayBuffer()));await writeFile(text_path,parsed.accepted[i].text);
+      records.push({name:files[i].name,size:files[i].size,characters:parsed.accepted[i].text.length,role:'reference',original_path,text_path});
+     }
+     job.files.push(...records);
+     for(const q of job.questions)job.clarifications.push({id:q.id,title:q.title,answer:answers[q.id].trim()});
+     job.questions=[];job.status='submitted';await persist(job);json(200,publicSummary(job));return;
+    }catch(error){job.status='needs_clarification';await persist(job);throw error;}
    }
    throw fail('不支持的请求。',405);
   }catch(error){if(!res.headersSent)json(error.status||400,{error:error.message||'处理失败，请重试。'});else res.end();}

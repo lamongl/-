@@ -1,6 +1,6 @@
 {
   "name": "prompt-workbench",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "成品工作台：Skill、本地MCP连接器与公开介绍下载站",

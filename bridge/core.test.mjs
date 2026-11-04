@@ -74,6 +74,22 @@ test('AI追问在界面回答后返回宿主，保留原始需求',async t=>{
  assert.equal(info.clarifications[0].answer,'客户，重点说明价值和证据边界');
 });
 
+test('追问时补交参考文件，保留原材料、自由回答并唤醒等待',async t=>{
+ const {bridge,job}=await setup(t);await upload(job);
+ await bridge.askQuestions(job.job_id,[{id:'reference',title:'有可参考的案例或模板吗？',options:['有，按模板格式','没有，AI建议']}]);
+ const headers={'X-Workbench-Token':job.token};
+ const bad=new FormData();bad.set('answers',JSON.stringify({reference:'有'}));bad.append('files',new File(['x'],'bad.exe'));
+ assert.equal((await fetch(job.api_url+'/answers',{method:'POST',headers,body:bad})).status,400);
+ assert.equal((await bridge.getJob(job.job_id)).status,'needs_clarification');
+ assert.equal((await bridge.getJob(job.job_id)).files.length,1);
+ const body=new FormData();body.set('answers',JSON.stringify({reference:'沿用章节和表格，不沿用颜色'}));body.append('files',new File(['# 封面\n## 目录\n正文'],'参考格式.md'));
+ const waiting=bridge.waitForSubmission(job.job_id,2000);
+ assert.equal((await fetch(job.api_url+'/answers',{method:'POST',headers,body})).status,200);
+ const ready=await waiting;assert.equal(ready.status,'submitted');assert.equal(ready.files.length,2);
+ assert.equal(ready.files[1].role,'reference');assert.equal(ready.clarifications[0].answer,'沿用章节和表格，不沿用颜色');
+ assert.match((await bridge.readMaterial(job.job_id,1)).text,/封面/);
+});
+
 test('替换成其他任务目录的output联接不能发布或下载跨任务文件',async t=>{
  const {bridge,job,root}=await setup(t);await upload(job);
  await confirm(bridge,job);

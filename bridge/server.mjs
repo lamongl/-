@@ -8,7 +8,7 @@ import {callWorkbenchTool} from './actions.mjs';
 
 const dataDir=process.env.WORKBENCH_DATA_DIR||fileURLToPath(new URL('../.workbench/jobs/',import.meta.url));
 const bridge=await createBridge({dataDir});
-const server=new Server({name:'delivery-workbench',version:'1.4.1'},{capabilities:{tools:{}}});
+const server=new Server({name:'delivery-workbench',version:'1.5.0'},{capabilities:{tools:{}}});
 const string={type:'string'},id={job_id:string},readAnnotations={readOnlyHint:true,destructiveHint:false,openWorldHint:false};
 const tools=[
  {name:'create_job',description:'立即创建任务并自动请求打开独立工作台窗口，让用户提交材料和需求。返回window.status为requested时不要重复打开；unavailable或disabled时由宿主打开ui_url。之后wait_for_submission，不先在聊天访谈。',inputSchema:{type:'object',properties:{title:string,request:string,outputKind:{type:'string',enum:['auto','pptx','docx','xlsx','pdf','text','code']}},additionalProperties:false}},
