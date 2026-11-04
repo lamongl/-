@@ -66,14 +66,23 @@ try{
   const session=await healthy();
   console.log(JSON.stringify(session?await localRequest(session,command==='stop'?'/stop':'/health',command==='stop'?{}:undefined):{ok:false,running:false}));
  }else{
-  if(!command)throw Error('用法：node bridge/cli.mjs <操作名> [--input 参数.json]');
+  if(!command)throw Error('用法：node bridge/cli.mjs <操作名> [--input 参数.json] [--follow]');
+  const follow=args.includes('--follow');
+  if(follow&&command!=='wait_for_submission')throw Error('--follow 只用于 wait_for_submission。');
+  if(args.filter(arg=>arg==='--follow').length>1)throw Error('--follow 不得重复。');
+  const inputArgs=args.filter(arg=>arg!=='--follow');
   let parameters={};
-  if(args.length){
-   if(args.length!==2||args[0]!=='--input')throw Error('参数必须通过 --input JSON文件 提供。');
-   parameters=JSON.parse((await readFile(resolve(args[1]),'utf8')).replace(/^\uFEFF/,''));
+  if(inputArgs.length){
+   if(inputArgs.length!==2||inputArgs[0]!=='--input')throw Error('参数必须通过 --input JSON文件 提供。');
+   parameters=JSON.parse((await readFile(resolve(inputArgs[1]),'utf8')).replace(/^\uFEFF/,''));
    if(!parameters||typeof parameters!=='object'||Array.isArray(parameters))throw Error('参数必须是JSON对象。');
   }
   const session=await ensureService();
-  console.log(JSON.stringify(await localRequest(session,'/call',{name:command,arguments:parameters})));
+  let result;
+  do{
+   result=await localRequest(session,'/call',{name:command,arguments:parameters});
+   if(follow&&result.waiting_for_user)console.error(JSON.stringify({event:'waiting_for_user',job_id:result.job_id,status:result.status}));
+  }while(follow&&result.waiting_for_user);
+  console.log(JSON.stringify(result));
  }
 }catch(error){console.error(JSON.stringify({error:error.message}));process.exitCode=1;}

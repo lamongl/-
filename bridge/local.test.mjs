@@ -21,6 +21,18 @@ test('无MCP宿主跨命令保留同一任务，追问后交付，重启后链�
   const {stdout}=await exec(process.execPath,argv,{env,timeout:20000});
   return JSON.parse(stdout);
  }
+ async function follow(args){
+  const file=join(root,'follow-'+Math.random().toString(16).slice(2)+'.json');
+  await writeFile(file,JSON.stringify(args));
+  const pending=exec(process.execPath,[cli,'wait_for_submission','--input',file,'--follow'],{env,timeout:20000});
+  let messages='';
+  const waiting=new Promise(resolve=>pending.child.stderr.on('data',chunk=>{
+   messages+=chunk;
+   if(messages.split('\n').filter(line=>line.includes('"event":"waiting_for_user"')).length>=2)resolve();
+  }));
+  const ready=Promise.race([waiting,pending.then(()=>{throw Error('等待进程在用户提交前退出。');})]);
+  return {ready,result:pending.then(({stdout})=>JSON.parse(stdout))};
+ }
  t.after(async()=>{
   await command('stop').catch(()=>{});
   assert.ok(resolve(root).startsWith(resolve(tmpdir())+sep));
@@ -29,18 +41,27 @@ test('无MCP宿主跨命令保留同一任务，追问后交付，重启后链�
  const starts=await Promise.all([command('start'),command('start')]);
  assert.equal(starts[0].endpoint,starts[1].endpoint);
  const job=await command('create_job',{request:'做一个摘要'});
+ const inputWait=await follow({job_id:job.job_id,timeout_ms:20});
+ // 捕获退出错误，同时确认跨过多次超时后仍在等待本轮界面提交。
+ inputWait.result.catch(()=>{});
+ await inputWait.ready;
  const session=JSON.parse(await readFile(join(root,'session.json'),'utf8'));
  assert.equal((await fetch(new URL('/health',session.endpoint))).status,403);
  assert.equal((await fetch(new URL('/health',session.endpoint),{headers:{'X-Workbench-Control':session.token,Origin:session.endpoint}})).status,400);
  const body=new FormData();body.set('request','做一个摘要');body.set('outputKind','text');body.append('files',new File(['论文论证材料。'],'paper.txt'));
  const headers={'X-Workbench-Token':job.token};
  assert.equal((await fetch(job.api_url+'/submit',{method:'POST',headers,body})).status,200);
+ assert.equal((await inputWait.result).status,'submitted');
  assert.equal((await command('get_job',{job_id:job.job_id})).files.length,1);
  assert.equal((await command('read_material',{job_id:job.job_id,file_index:0})).text,'论文论证材料。');
  await assert.rejects(command('set_progress',{job_id:job.job_id,status:'processing'}),/工作台/);
  await command('ask_questions',{job_id:job.job_id,questions:[{id:'purpose',title:'摘要用于哪里？',options:['答辩','快速阅读']}]});
  const visible=await (await fetch(job.api_url,{headers})).json();assert.equal(visible.questions[0].title,'摘要用于哪里？');
+ const answerWait=await follow({job_id:job.job_id,timeout_ms:20});
+ answerWait.result.catch(()=>{});
+ await answerWait.ready;
  await fetch(job.api_url+'/answers',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({answers:{purpose:'答辩'}})});
+ assert.equal((await answerWait.result).clarifications[0].answer,'答辩');
  assert.equal((await command('wait_for_submission',{job_id:job.job_id,timeout_ms:1})).clarifications[0].answer,'答辩');
  await command('set_progress',{job_id:job.job_id,status:'processing'});
  const file=join(job.output_dir,'摘要.md');await writeFile(file,'# 摘要\n材料核心观点。');

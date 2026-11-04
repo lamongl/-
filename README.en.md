@@ -1,6 +1,6 @@
 # Deliver Workbench
 
-[Product website](https://lamongl.github.io/-/) · [Download v1.4.0](https://lamongl.github.io/-/deliver-workbench/SKILL.md) · [中文](README.md)
+[Product website](https://lamongl.github.io/-/) · [Download v1.4.1](https://lamongl.github.io/-/deliver-workbench/SKILL.md) · [中文](README.md)
 
 An open-source Skill and local stdio MCP connector. Submit requirements and reference files in a local interface. Your current AI host reads the material, clarifies meaningful decisions, creates and checks actual deliverables, and returns downloadable files. No intermediate prompt copying is required.
 
@@ -14,4 +14,4 @@ A single matched presentation trial found a modest improvement in defence readin
 
 Local development: `npm ci`, `npm test`, `npm start`. Build: `npm run build` → `site-dist/`. License: MIT.
 
-Version 1.4 prioritises native MCP setup and actual host-tool verification. A server self-test is reported separately. The local CLI is an explicit user-selected fallback for file-and-command Agents, sharing the same question and delivery logic. Native Doubao stdio registration still requires verification in its client. See INSTALL.md for Markdown extraction and lock-preserving dependency recovery.
+Version 1.4.1 prioritises verified MCP setup and automatically falls back to the existing Markdown/CLI installation when MCP is unavailable. The CLI --follow mode stays attached across long-poll timeouts; submission and in-workbench answers return directly to the running Agent. Keep the host tool session active instead of asking the user to type a continuation prompt. A server self-test does not prove host integration. Hosts that terminate the AI session need a verified wakeup facility; unattended continuation must be accepted in the actual client. See INSTALL.md for setup and lock-preserving dependency recovery.

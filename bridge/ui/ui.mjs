@@ -92,7 +92,7 @@ function apply(state){
   stage('working');$('submitted-files').textContent=state.files.map(file=>file.name+' · '+file.characters.toLocaleString('zh-CN')+' 字符已读取').join('\n');
   $('status-kicker').textContent=state.status==='processing'?'AI 正在制作':state.status==='failed'?'需要处理的问题':'资料已提交';
   $('status-title').textContent=state.status==='processing'?'思路已明确，正在完成你的任务。':state.status==='failed'?'这次制作未能完成。':'等待 AI 接收任务';
-  $('status-description').textContent=state.status==='processing'?(state.message||'AI 正在使用材料制作并检查成品，请保持当前对话开启。'):state.status==='failed'?(state.message||'请回到 AI 对话处理。'):'提交已保存。请保持当前 AI 对话开启；如对话已结束，回到对话说“继续完成工作台任务”。';
+  $('status-description').textContent=state.status==='processing'?(state.message||'AI 正在使用材料制作并检查成品，请保持当前对话开启。'):state.status==='failed'?(state.message||'请回到 AI 对话处理。'):'提交已保存。请保持当前 AI 任务运行，问题和成品会在这里显示，无需回聊天输入“继续”。';
  }
 }
 async function refresh(){

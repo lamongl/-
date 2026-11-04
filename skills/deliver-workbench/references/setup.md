@@ -34,9 +34,15 @@
 
 官方参考：[MCP 客户端字段](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/mcp/mcp-client/README.md)、[profile patch 合并方式](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/mcp-memory.md)。
 
-### 减少反复输入“继续”
+### 界面提交后直接接续
 
-25秒是一次等待的上限，可以接续调用。当前轮仍运行且宿主允许时，每个上传/答题节点按实际时钟最多等待约3分钟；收到提交立即继续，超时不重复创建任务。等待结果新增 waiting_for_user、next_action 和 continuation_hint，MCP 与 CLI 一致。只有总等待预算用尽、用户取消或宿主限制时才结束回合。工具返回不能保证唤醒已结束的模型会话；未验证宿主事件接口时，恢复仍需要回原聊天发送一次“继续工作台任务”。
+MCP 的25秒上限是一轮长轮询的上限，不是 AI 回合结束条件。waiting_for_user 为 true 时保持同一 job_id 接续等待，不采用固定3分钟后暂停的规则；submitted 后立即读取并处理，不让用户回聊天输入“继续”。等待期间宿主任务保持运行，用户取消、实际错误或宿主明确的硬限制时才停止。不要用极短 timeout_ms 空转。
+
+CLI 在每个上传及答题节点使用 `node bridge/cli.mjs wait_for_submission --input wait.json --follow`。wait.json 例如 `{"job_id":"实际任务ID","timeout_ms":25000}`。命令在后台服务上接续多次长轮询，用户提交后 stdout 返回最终 JSON；stderr 的 waiting_for_user 事件仅表示仍在等待。中断等待命令不会停止后台或删除任务。
+
+Agent 必须使用宿主可持续接收输出的命令会话，启动时让执行工具返回会话句柄，随后调用宿主的会话等待工具，每次不超过30秒，直到命令返回；不能把命令脱离宿主后结束 AI 回合。取得材料后调用 ask_questions，在同一页面展示问题，再启动下一次 --follow 等界面回答，之后直接制作并 publish_result。所有动作由原 AI 任务接续，不需要用户发送额外提示词。
+
+本地服务只保存状态，不会独立调用模型。若宿主强制结束会话且没有已验证的事件唤醒接口，网页不能自行唤醒模型；应报告“免聊天续接未通过”，不能靠隐藏这一限制声称支持。安装验收应在当前宿主实际跑通上传与答题两个节点，而不是仅验证本地进程可运行。
 
 ### 文件制作与转换
 
@@ -44,9 +50,9 @@
 
 若 LibreOffice Kit 返回 EEXIST，优先转换到当前任务 output 下新的版本文件名；保留上一版，核对新文件再发布。不默认删除已有成品，也不向用户交付仅改后缀的文件。
 
-## 用户选择后的 CLI 备用方式
+## MCP 不可用时自动使用 CLI
 
-适用于当前宿主尚未接入本地 stdio MCP、但支持本地文件和命令的场景。需要用户明确选择此方式。先完成依赖安装与自检，在工作台目录运行以下命令。`node` 应替换为当前环境真实可用的 Node 命令。
+适用于当前宿主尚未接入本地 stdio MCP、但支持本地文件、命令和持续等待的场景。MCP 不可用时按用户要求自动沿用此流程，告知实际接入方式即可。先完成依赖安装与自检，在工作台目录运行以下命令。`node` 应替换为当前环境真实可用的 Node 命令。用户禁止本地执行时不启用；已创建的任务始终沿用原服务，不跨方式混用。
 
 ```text
 node bridge/cli.mjs start
@@ -64,7 +70,7 @@ node bridge/cli.mjs create_job --input job.json
 | 操作 | 参数文件中的字段 |
 |---|---|
 | `get_job` | `job_id` |
-| `wait_for_submission` | `job_id`，可选 `timeout_ms`，最多25000 |
+| `wait_for_submission` | `job_id`，可选 `timeout_ms`，最多25000；上传和答题节点在命令末尾加 `--follow` |
 | `read_material` | `job_id`、`file_index`，可选 `offset`、`length` |
 | `ask_questions` | `job_id`、`questions`，每轮1至3题 |
 | `set_progress` | `job_id`、`status`，可选 `message` |

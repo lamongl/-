@@ -13,7 +13,7 @@ export async function callWorkbenchTool(bridge,name,args={}){
    const job=await bridge.waitForSubmission(args.job_id,args.timeout_ms);
    const waiting=['awaiting_input','uploading','needs_clarification'].includes(job.status);
    return {...job,waiting_for_user:waiting,next_action:waiting?'wait_for_submission':job.status==='submitted'?'get_job':job.status,
-    continuation_hint:waiting?'本次等待结束，任务仍待用户操作。保持同一job_id继续等待；单次25秒上限不是会话必须结束。宿主允许时可在约3分钟内重复等待，实际总时长到期再暂停。':'读取当前状态和真实回答，按任务流程继续。'};
+    continuation_hint:waiting?'本次等待结束，任务仍待用户操作。保持同一job_id接续等待，不因25秒超时或固定3分钟预算结束回合，不要求用户回聊天输入继续。CLI使用wait_for_submission --follow，宿主保持当前工具任务运行；用户取消、宿主硬限制或实际错误时停止并如实报告。':'读取当前状态和真实回答，按任务流程继续。'};
   }
   case 'read_material': return bridge.readMaterial(args.job_id,args.file_index,args.offset,args.length);
   case 'ask_questions': return bridge.askQuestions(args.job_id,args.questions);

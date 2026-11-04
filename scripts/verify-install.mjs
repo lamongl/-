@@ -6,7 +6,7 @@ import {join,resolve,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const dataDir=await mkdtemp(join(tmpdir(),'delivery-install-check-'));
-const client=new Client({name:'delivery-install-check',version:'1.4.0'});
+const client=new Client({name:'delivery-install-check',version:'1.4.1'});
 const transport=new StdioClientTransport({command:process.execPath,args:[fileURLToPath(new URL('../bridge/server.mjs',import.meta.url))],env:{...process.env,WORKBENCH_DATA_DIR:dataDir,WORKBENCH_OPEN_WINDOW:'0'}});
 try{
  await client.connect(transport);
