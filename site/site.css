@@ -18,7 +18,7 @@
 .hero-actions {
   gap: 22px;
 }
-.hero-actions .button {
+.skill-download {
   min-height: 44px;
   padding: 10px 19px;
   border-radius: 9px;
@@ -27,7 +27,7 @@
   font-size: 15px;
   font-weight: 600;
 }
-.hero-actions .button:hover {
+.skill-download:hover {
   background: #dddde3;
   transform: none;
 }
@@ -46,4 +46,46 @@
     flex-direction: row;
     gap: 18px;
   }
+}
+
+nav .skill-download {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+nav .skill-download:hover {
+  color: #151518;
+}
+.install-body .skill-download {
+  background: #151518;
+  color: #f5f5f7;
+}
+.install-body .skill-download:hover {
+  background: #343439;
+}
+.download-pair {
+  flex-flow: row wrap;
+  gap: 8px 24px;
+}
+.download-pair a,
+.study-note-link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #333338;
+  font-size: 14px;
+  text-decoration: underline;
+  text-decoration-color: #96969f;
+  text-underline-offset: 4px;
+}
+.download-pair a:hover,
+.study-note-link a:hover {
+  color: #151518;
+  text-decoration-color: currentColor;
+}
+.study-note-link {
+  max-width: 1200px;
+  margin: 6px auto 0;
 }
