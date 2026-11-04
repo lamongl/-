@@ -47,7 +47,7 @@ $('task-form').onsubmit=async event=>{
   const body=new FormData();body.set('request',text);body.set('outputKind',$('output-kind').value);files.forEach(file=>body.append('files',file));
   const response=await request('/submit',{method:'POST',body});apply(await response.json());
  }catch(error){showError('form-error',error.message);}
- finally{busy=false;$('submit').disabled=false;$('choose-files').disabled=false;$('submit').textContent='交给 AI 制作 →';renderFiles();}
+ finally{busy=false;$('submit').disabled=false;$('choose-files').disabled=false;$('submit').textContent='交给 AI 制作';renderFiles();}
 };
 function renderQuestions(questions){
  currentQuestions=questions;$('questions').replaceChildren();
@@ -84,7 +84,7 @@ function apply(state){
   stage('done');$('delivery-note').textContent=state.message||'选择下面的文件下载。';$('artifacts').replaceChildren();
   state.artifacts.forEach((artifact,index)=>{
    const row=document.createElement('div');row.className='artifact';const detail=document.createElement('div'),name=document.createElement('strong'),meta=document.createElement('small');name.textContent=artifact.name;meta.textContent=size(artifact.size);detail.append(name,meta);
-   const download=document.createElement('button');download.className='primary';download.type='button';download.textContent='下载成品 ↓';download.onclick=async()=>{
+   const download=document.createElement('button');download.className='primary';download.type='button';download.textContent='下载成品';download.onclick=async()=>{
     download.disabled=true;try{const response=await request('/artifacts/'+index),url=URL.createObjectURL(await response.blob()),link=document.createElement('a');link.href=url;link.download=artifact.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(error){showError('download-error',error.message);}finally{download.disabled=false;}
    };row.append(detail,download);$('artifacts').append(row);
   });
